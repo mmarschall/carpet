@@ -39,7 +39,7 @@ module Adm
     pfexec("/usr/sbin/useradd -d /export/home/#{username}#{uid_opts}#{profile_opts}#{role_opts} -m -g #{group} -s /usr/bin/bash #{username}", options) unless user_exists?(username, options)
     unlock_user(username, default_password_hash, options) if exists?(:default_password_hash)
     ssh_keys(username, keys, options.merge(:group => group))
-    assure(:file, "/etc/sudoers", capture("pfexec cat /etc/sudoers", options) << "\n#{username} ALL=(ALL) NOPASSWD: ALL", options) if options[:sudoers]
+    assure(:file, "/etc/sudoers", capture("pfexec cat /etc/sudoers", options) << "\n#{username} ALL=(ALL) NOPASSWD: ALL", options.merge(:mode => "440", :owner => "root", :group => "root")) if options[:sudoers]
   end
   
   def unlock_user(username, password, options={})
