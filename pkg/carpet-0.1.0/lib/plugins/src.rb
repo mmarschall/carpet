@@ -13,6 +13,8 @@ module Src
     invoke_command("/usr/gnu/bin/tar xzf #{tar_gz}", options)
     install_cmd = "cd #{dir} && #{options.delete(:install_cmd) || "./configure#{' '+configure_opts unless configure_opts.nil?} && make && pfexec make install"}"
     invoke_command(install_cmd, options)
+    pfexec("rm #{tar_gz}")
+    pfexec("rm -rf #{dir}")
   end
 end
 

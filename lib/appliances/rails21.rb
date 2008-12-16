@@ -1,9 +1,9 @@
 Capistrano::Configuration.instance(:must_exist).load do 
   task :rails do
     assure :command, :ruby do
-      src.install("ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p72.tar.gz")
+      src.install("ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p287.tar.gz", :configure_opts => "--without-gcc")
     end
-    assure :command, :gem do
+    assure :match, "gem --version", "1.3.1" do
       src.install("http://rubyforge.org/frs/download.php/45905/rubygems-1.3.1.tgz", :install_cmd => "pfexec ruby ./setup.rb")
     end
     assure :package, "SUNWlxml"
@@ -25,15 +25,6 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :gem, "mongrel_cluster", "1.0.5"
     assure :gem, "fit", "1.1"
     assure :gem, "net-scp", "1.0.1"
-    
-    assure :match, "gem list", "libxml"  do
-      url = "http://rubyforge.org/frs/download.php/48087/libxml-ruby-0.9.6.tgz"
-      tar_gz = url.split('/').last
-      dir = tar_gz.gsub(".tgz", "") if tar_gz.include?(".tgz")
-      invoke_command("test -f #{tar_gz} || wget --progress=dot:mega -N #{url}")
-      invoke_command("/usr/gnu/bin/tar xzf #{tar_gz}")
-      assure :file, "libxml-ruby-0.9.6/ext/libxml/sax_parser_callbacks.inc", File.read(File.dirname(__FILE__) + "/sax_parser_callbacks.inc")
-      invoke_command("cd libxml-ruby-0.9.6 && pfexec rake && cd admin/pkg && pfexec gem install libxml-ruby --no-ri --no-rdoc")
-    end
+    assure :gem, "libxml-ruby", "0.9.7"
   end
 end
