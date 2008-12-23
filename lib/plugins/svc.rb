@@ -51,6 +51,10 @@ module Svc
   def refresh(svc, options={})
     pfexec("/usr/sbin/svcadm refresh #{svc}", options)
   end
+
+  def restart(svc, options={})
+    pfexec("/usr/sbin/svcadm restart #{svc}", options)
+  end
 end
 
 Capistrano.plugin :svc, Svc

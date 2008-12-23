@@ -56,6 +56,13 @@ describe "Zone plugin" do
       @svc.refresh("system/rcap")
     end
   end
+
+  describe "- restart method" do
+    it "should restart the service config" do
+      @svc.should_receive(:pfexec).with("/usr/sbin/svcadm restart system/rcap", {})
+      @svc.restart("system/rcap")
+    end
+  end
   
   describe "- online? method" do
     it "should return true if a service is online" do

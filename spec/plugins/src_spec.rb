@@ -5,6 +5,7 @@ describe "Src plugin" do
     @config = Capistrano::Configuration.new
     @config.load("spec/Capfile")
     @config.stub!(:invoke_command)
+    @config.stub!(:run)
     @src = @config.src
   end
   

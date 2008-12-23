@@ -13,7 +13,7 @@ Echoe.new('carpet', '0.1.0') do |p|
   p.summary = "Weave your infrastructure with capistrano"
 
   p.url              = "http://github.com/webops/carpet/tree/master"
-  p.require_signed   = true
+  p.require_signed   = false
   p.dependencies     = ["capistrano      >=2.5.0"]
   p.development_dependencies = ["rspec >=1.1.11"]
 end
