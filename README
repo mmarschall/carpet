@@ -1,5 +1,14 @@
 = Carpet
 
+== What is Carpet? (short version)
+
+* Capistrano recipes for building a virtualized infrastructure
+* Declarative server definitions
+* Capistrano recipes for pre-defined, custom-built appliances
+* Uses latest and greatest OpenSolaris goodies (Zones, ZFS, SMF, ...) out of the box
+
+== What is Carpet? (long version)
+
 Carpet is a tool for bootstrapping and maintaining your physical or virtual
 servers. It's extracted from our real world Capistrano deployment recipes with
 which we have provisioned and maintained our production servers for over a year.
@@ -8,6 +17,12 @@ easy to add support for other target platforms as well.
 
 Carpet is heavily inspired by both Capistrano and Puppet and tries to leverage
 the simplicity of extending Capistrano with the declarative approach of puppet.
+Carpet has some common goals with Puppet:
+
+* Reproducable deployments
+* Shareable recipes
+* Maintainability
+* Extensibility
 
 Due to that declarative approach you don't need to remember all the tasks you
 have to run in order to change the state of your server. You simply tell
@@ -37,7 +52,11 @@ box with a fully fledged Ruby on Rails stack separated into individual zones
 
 == INSTALLATION
 
-	sudo gem install carpet
+	git clone git://github.com/webops/carpet.git
+	cd carpet
+	rake install
+	
+	(This will build and install the Carpet gem)
 
 == USAGE
 
@@ -97,17 +116,15 @@ Capistrano tasks, which will be executed when a node is set up.
 == LIMITATIONS / TODOs
 
 As Carpet is extracted from our real live deployment recipes, there are still
-a lot of limitations. Patches for overcoming them are always appreciated.
+a lot of limitations, which are ok for us but your milage might vary.
+Patches for overcoming them are always appreciated.
 
 * The rails appliance has gems and versions hardcoded. What should be there by
   default and what should be added by application specific tasks?
-* Only OpenSolaris is supported. All OS specific stuff should be
-  modularized
 * Carpet relies heavily on pfexec instead of sudo. Should be refactored to use
-  sudo by default, as sudo is shipped now with OpenSolaris 2008.11 (and with
-  all Linux variants)
+  sudo by default, as sudo is shipped now with OpenSolaris 2008.11 and is the
+  default in Capistrano
 * Documentation. For now, you have to look at the specs to see how to use it, sorry.
-* Many more, which I'm not aware of, yet ;-)
 
 == LICENSE:
 (The MIT License)
