@@ -2,9 +2,9 @@
 
 == What is Carpet? (short version)
 
-* Capistrano recipes for building a virtualized infrastructure
+* Capistrano recipes for building a virtualized infrastructure on OpenSolaris
 * Declarative server definitions
-* Capistrano recipes for pre-defined, custom-built appliances
+* Capistrano recipes for pre-defined, custom-built appliances for a complete Ruby on Rails stack
 * Uses latest and greatest OpenSolaris goodies (Zones, ZFS, SMF, ...) out of the box
 
 == What is Carpet? (long version)
