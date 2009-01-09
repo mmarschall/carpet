@@ -7,6 +7,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   task :database do
     assure :package, "SUNWmysql5"
     svc.enable("svc:/application/database/mysql:version_50")
+    svc.setprop("svc:/application/database/mysql:version_50", "mysql/enable_64bit", "true")
     pfexec("/usr/mysql/bin/mysqladmin -u root password #{mysql_root_password} || exit 0") if exists?(:mysql_root_password)
   end
   
