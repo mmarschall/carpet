@@ -5,8 +5,10 @@ Capistrano::Configuration.instance(:must_exist).load do
   end
   
   task :database do
+    assure :file, "/etc/mysql/5.0/my.cnf", File.read(mysql_conf_file)
     assure :package, "SUNWmysql5"
     svc.setprop("svc:/application/database/mysql:version_50", "mysql/enable_64bit", "true")
+    svc.enable("svc:/application/database/mysql:version_50")
     sleep(5) # give mysql server time to start up (service is online before mysql is fully started - especially InnoDB takes a couple seconds)
     pfexec("/usr/mysql/bin/mysqladmin -u root password #{mysql_root_password} || exit 0") if exists?(:mysql_root_password)
   end

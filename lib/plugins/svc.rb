@@ -37,8 +37,6 @@ module Svc
   def setprop(svc, prop, value, options={})
     svc = "svc:/" + svc unless svc.match(/^svc:\/.*/)
     pfexec("/usr/sbin/svccfg -s #{svc} setprop #{prop} = #{value}", options)
-    refresh(svc, options)
-    restart(svc, options)
   end
   
   def import_cfg_for(svc, options={})
