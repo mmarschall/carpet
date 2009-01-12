@@ -1,5 +1,11 @@
 Capistrano::Configuration.instance(:must_exist).load do 
   task :rails do
+    rails_default_permissions = {:owner => application_user, :group => "staff", :mode => 775}
+    assure :directory, "#{shared_path}", fetch(:default_permissions, rails_default_permissions)
+    assure :directory, "#{shared_path}/log", fetch(:default_permissions, rails_default_permissions)
+    assure :directory, "#{shared_path}/config", fetch(:default_permissions, rails_default_permissions)
+    assure :directory, "#{shared_path}/config/environments", fetch(:default_permissions, rails_default_permissions)
+    assure :directory, "#{shared_path}/tmp", fetch(:default_permissions, rails_default_permissions)
     assure :command, :ruby do
       src.install("ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p287.tar.gz", :configure_opts => "--without-gcc")
     end

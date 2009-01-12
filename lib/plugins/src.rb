@@ -3,6 +3,7 @@ require 'capistrano'
 module Src
   def install(url, options={})
     assure :command, "cc" do
+      pkg.install("SUNWfontconfig")
       pkg.install("sunstudioexpress")
     end
     configure_opts = options.delete(:configure_opts)
