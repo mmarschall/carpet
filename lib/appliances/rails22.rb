@@ -1,5 +1,5 @@
 Capistrano::Configuration.instance(:must_exist).load do 
-  task :rails do
+  task :rails22 do
     rails_default_permissions = {:owner => application_user, :group => "staff", :mode => 775}
     assure :directory, "#{shared_path}", fetch(:default_permissions, rails_default_permissions)
     assure :directory, "#{shared_path}/log", fetch(:default_permissions, rails_default_permissions)
@@ -23,7 +23,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :gem, "hoe", "1.8.2"
     assure :gem, "mini_magick", "1.2.3"
     assure :gem, "rubyzip", "0.9.1"
-    assure :gem, "rails", "2.1.0"
+    assure :gem, "rails", "2.2.2"
     assure :gem, "memcache-client", "1.5.0"
     assure :gem, "fastercsv", "1.4.0"
     assure :gem, "mysql", "2.7", :gem_opts => "-- --with-mysql-dir=/usr/mysql"
