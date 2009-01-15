@@ -7,6 +7,7 @@ describe "Zone plugin" do
     @config.stub!(:run)
     @svc = @config.svc
     @svc.stub!(:pfexec)
+    @svc.stub!(:wait_for)
   end
   
   describe "- enable method" do
@@ -60,6 +61,7 @@ describe "Zone plugin" do
   describe "- restart method" do
     it "should restart the service config" do
       @svc.should_receive(:pfexec).with("/usr/sbin/svcadm restart system/rcap", {})
+      @svc.should_receive(:wait_for).with("system/rcap", {})
       @svc.restart("system/rcap")
     end
   end

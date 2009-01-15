@@ -24,6 +24,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :gem, "mini_magick", "1.2.3"
     assure :gem, "rubyzip", "0.9.1"
     assure :gem, "rails", "2.2.2"
+    patch_inflector_rb
     assure :gem, "memcache-client", "1.5.0"
     assure :gem, "fastercsv", "1.4.0"
     assure :gem, "mysql", "2.7", :gem_opts => "-- --with-mysql-dir=/usr/mysql"
@@ -32,5 +33,19 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :gem, "fit", "1.1"
     assure :gem, "net-scp", "1.0.1"
     assure :gem, "libxml-ruby", "0.9.7"
+    assure :gem, "rspec", "1.1.12"
+    assure :gem, "rspec-rails", "1.1.12"
+    assure :gem, "cucumber", "0.1.15"
+  end
+  
+  def patch_inflector_rb
+    patch = <<-PATCH
+    275a276
+    >     rescue Iconv::InvalidEncoding
+    PATCH
+    gemdir = capture("gem env gemdir").strip
+    pf_put(patch, "patch.txt")
+    invoke_command("sudo patch -i patch.txt #{gemdir}/gems/activesupport-2.2.2/lib/active_support/inflector.rb")
+    invoke_command("rm patch.txt")
   end
 end
