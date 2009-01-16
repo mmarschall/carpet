@@ -97,4 +97,62 @@ describe "rails appliance recipe" do
       rails22
     end
   end
+  
+  it "should assure the rspec gem" do
+    @config.should_receive(:assure).with(:gem, "rspec", "1.1.12")
+    @config.load do
+      rails22
+    end
+  end
+  
+  it "should assure the rspec-rails gem" do
+    @config.should_receive(:assure).with(:gem, "rspec-rails", "1.1.12")
+    @config.load do
+      rails22
+    end
+  end
+  
+  it "should assure the cucumber gem" do
+    @config.should_receive(:assure).with(:gem, "cucumber", "0.1.15")
+    @config.load do
+      rails22
+    end
+  end
+  
+  it "should patch rails for OpenSolaris" do
+    @config.should_receive(:patch_inflector_rb)
+    @config.load do
+      rails22
+    end
+  end
+  
+  it "should upload the patch file" do
+    patch = <<-PATCH
+    275a276
+    >     rescue Iconv::InvalidEncoding
+    PATCH
+    @config.should_receive(:pf_put).with(patch, "patch.txt")
+    @config.load do
+      patch_inflector_rb
+    end
+  end
+  
+  it "should capture the gemdir" do
+    @config.should_receive(:capture).with("gem env gemdir")
+    @config.load do
+      patch_inflector_rb
+    end
+  end
+  
+  it "should apply the patch file" do
+    gemdir = "a/path/to/gems"
+    @config.stub!(:capture).and_return(gemdir)
+    @config.stub!(:invoke_command)
+    @config.should_receive(:invoke_command).with("sudo patch -i patch.txt #{gemdir}/gems/activesupport-2.2.2/lib/active_support/inflector.rb")
+    @config.load do
+      patch_inflector_rb
+    end
+  end
+
+  it "should delete the patch file after applying it"
 end

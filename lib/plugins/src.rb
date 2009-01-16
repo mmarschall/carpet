@@ -12,7 +12,7 @@ module Src
     dir = tar_gz.gsub(".tgz", "") if tar_gz.include?(".tgz")
     invoke_command("test -f #{tar_gz} || wget --progress=dot:mega -N #{url}", options)
     invoke_command("/usr/gnu/bin/tar xzf #{tar_gz}", options)
-    install_cmd = "cd #{dir} && #{options.delete(:install_cmd) || "./configure#{' '+configure_opts unless configure_opts.nil?} && make && pfexec make install"}"
+    install_cmd = "cd #{dir} && #{options.delete(:install_cmd) || "CC=cc ./configure#{' '+configure_opts unless configure_opts.nil?} && gmake && pfexec gmake install"}"
     invoke_command(install_cmd, options)
     pfexec("rm #{tar_gz}")
     pfexec("rm -rf #{dir}")

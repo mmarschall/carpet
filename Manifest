@@ -18,7 +18,7 @@ Manifest
 Rakefile
 README
 spec/appliances/apache_lb_spec.rb
-spec/appliances/rails21_spec.rb
+spec/appliances/rails22_spec.rb
 spec/Capfile
 spec/capistrano/deploy/remote_dependency_spec.rb
 spec/carpet_spec.rb
