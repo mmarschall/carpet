@@ -4,6 +4,7 @@ describe "apache loadbalancer appliance recipe" do
   
   before do
     @config = Capistrano::Configuration.new
+    @config.respond_to?(:bal, true)
     @config.load("spec/Capfile")
     @config.stub!(:run)
     @config.stub!(:put)

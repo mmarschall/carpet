@@ -2,6 +2,7 @@ require 'capistrano'
 
 module Adm
   def mkdir(path, options={})
+    logger.debug "mkdir(#{path}, #{options.inspect})"
     mode = options[:mode]
     owner = options[:owner]
     group = options[:group]
@@ -52,21 +53,25 @@ module Adm
   end
   
   def chgrp(path, options={})
+    logger.debug "chgrp(#{path}, #{options.inspect})"
     group = options[:group]
     pfexec("/usr/bin/chgrp -R #{group} #{path}", options) if group
   end
   
   def chown(path, options={})
+    logger.debug "chown(#{path}, #{options.inspect})"
     owner = options[:owner]
     pfexec("/usr/bin/chown -R #{owner} #{path}", options) if owner
   end
   
   def chmod(path, options={})
+    logger.debug "chmod(#{path}, #{options.inspect})"
     mode = options[:mode]
     pfexec("/usr/bin/chmod -R #{mode} #{path}", options) if mode
   end
   
   def chkdir(path, options={})
+    logger.debug "chkdir(#{path}, #{options.inspect})"
     ls_ld = capture("pfexec ls -ld #{path}", options).strip.split(" ")
     owner = ls_ld[2]
     group = ls_ld[3]

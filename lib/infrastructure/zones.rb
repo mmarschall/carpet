@@ -21,9 +21,14 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure(:package, "SUNWless", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWman", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWwget", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure(:package, "SUNWgnu-coreutils", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure(:package, "SUNWgmake", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWgtar", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWggrp", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWbtool", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure(:package, "SUNWperl584core", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure(:package, "SUNWperl584usr", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure(:package, "SUNWperl584man", zone_options.merge({:via => :zlogin, :zone => zone_name}))
   end
 end
 

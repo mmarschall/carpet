@@ -16,6 +16,7 @@ Echoe.new('carpet', '0.1.0') do |p|
   p.require_signed   = false
   p.dependencies     = ["capistrano      >=2.5.0"]
   p.development_dependencies = ["rspec >=1.1.11"]
+  p.use_sudo = false if ENV['SUDOLESS']
 end
 
 require 'spec/rake/spectask'

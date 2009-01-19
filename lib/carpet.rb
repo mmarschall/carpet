@@ -15,7 +15,7 @@ require "infrastructure/zones"
 
 # appliances
 require "appliances/apache_lb"
-require "appliances/rails21"
+require "appliances/rails22"
 require "appliances/mysql"
 require "appliances/memcached"
 
@@ -161,14 +161,15 @@ def zlogin(cmd, options={}, &block)
 end
 
 def pf_put(data, path, options={})
-  tmp = options.delete(:tmp) || "/tmp"
-  owner = options.delete(:owner)
-  group = options.delete(:group)
-  mode = options.delete(:mode) # avoid Capistrano::Configuration::Actions::FileTransfer.upload to try to set the mode using :run (instead of invoke_command)
+  opts = options.dup
+  tmp = opts.delete(:tmp) || "/tmp"
+  owner = opts.delete(:owner)
+  group = opts.delete(:group)
+  mode = opts.delete(:mode) # avoid Capistrano::Configuration::Actions::FileTransfer.upload to try to set the mode using :run (instead of invoke_command)
   file = path.split("/").last
-  put_opts = options.dup
+  put_opts = opts.dup
   put_opts.delete(:via)
-  path = "/zones/#{options[:zone]}/root#{path}" if options[:via] == :zlogin && !options[:zone].nil?
+  path = "/zones/#{options[:zone]}/root#{path}" if opts[:via] == :zlogin && !opts[:zone].nil?
   put(data, "#{tmp}/#{file}", put_opts)
   pfexec("mv #{tmp}/#{file} #{path}", put_opts)
   adm.chown(path, put_opts.merge(:owner => owner)) if owner

@@ -54,6 +54,7 @@ module Svc
 
   def restart(svc, options={})
     pfexec("/usr/sbin/svcadm restart #{svc}", options)
+    wait_for(svc, options)
   end
 end
 
