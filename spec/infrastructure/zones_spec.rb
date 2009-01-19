@@ -63,7 +63,7 @@ describe "zone infrastructure recipe" do
     end
   
     it "should set the zones quota in zfs" do
-      @zone.should_receive(:set_quota).with("web1", {})
+      @zone.should_receive(:set_quota).with("web1", nil, {})
       @config.a_zone
     end
   

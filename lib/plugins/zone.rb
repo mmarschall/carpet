@@ -69,8 +69,7 @@ module Zone
     pfexec("/usr/sbin/zonecfg -z #{name} \"set autoboot=#{value}\"", options)
   end
 
-  def set_quota(name, options={})
-    value = options.delete(:disk)
+  def set_quota(name, value="20G", options={})
     zfs.set_property("rpool/zones/#{name}", "quota", value, options)
   end
   
