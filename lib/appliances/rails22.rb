@@ -6,10 +6,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :directory, "#{shared_path}/config", fetch(:default_permissions, rails_default_permissions)
     assure :directory, "#{shared_path}/config/environments", fetch(:default_permissions, rails_default_permissions)
     assure :directory, "#{shared_path}/tmp", fetch(:default_permissions, rails_default_permissions)
-    assure :command, :ruby do
-      src.install("ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6-p287.tar.gz", :configure_opts => "--without-gcc")
+    assure :match, "ruby --version", /1.8.7/ do
+      src.install("ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p72.tar.gz", :configure_opts => "--without-gcc")
     end
-    assure :command, :git, zone_options.merge({:via => :zlogin, :zone => zone_name}) do
+    assure :command, :git do
       src.install("http://kernel.org/pub/software/scm/git/git-1.6.1.tar.gz")
     end
     assure :match, "gem --version", "1.3.1" do
