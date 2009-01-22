@@ -138,8 +138,8 @@ net:
     
     it "should be possible, to configure the zone's disk quota" do
       @zfs = @config.zfs
-      @zfs.should_receive(:set_property).with("rpool/zones/web1", "quota", "20G", {})
-      @zone.set_quota("web1", :disk => "20G")
+      @zfs.should_receive(:set_property).with("rpool/zones/web1", "quota", "40G", {})
+      @zone.set_quota("web1", "40G")
     end
   end
   
