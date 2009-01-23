@@ -9,6 +9,7 @@ require 'plugins/zfs'
 require 'plugins/svc'
 require 'plugins/adm'
 require 'plugins/nfs'
+require 'plugins/cpan'
 
 # infrastructure
 require "infrastructure/zones"

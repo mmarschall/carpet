@@ -8,6 +8,7 @@ lib/capistrano/deploy/remote_dependency.rb
 lib/carpet.rb
 lib/infrastructure/zones.rb
 lib/plugins/adm.rb
+lib/plugins/cpan.rb
 lib/plugins/nfs.rb
 lib/plugins/pkg.rb
 lib/plugins/src.rb
@@ -17,6 +18,7 @@ lib/plugins/zone.rb
 Manifest
 Rakefile
 README
+resources/Config.pm
 spec/appliances/apache_lb_spec.rb
 spec/appliances/rails22_spec.rb
 spec/Capfile
