@@ -16,13 +16,13 @@ ssh-dss AAAAB3NzaC1kcjRk4= ca@example.com
   
   describe "- user_exists? method" do
     it "should return true, if the user exists" do
-      @adm.should_receive(:capture).with("cat /etc/passwd", {}).and_return("nobody:x:60001:60001:NFS Anonymous Access User:/:\napl:x:101::/export/home/apl:/usr/bin/bash\n")
-      @adm.user_exists?("apl").should be(true)
+      @adm.should_receive(:capture).with("cat /etc/passwd", {}).and_return("nobody:x:60001:60001:NFS Anonymous Access User:/:\ndepp:x:101::/export/home/depp:/usr/bin/bash\n")
+      @adm.user_exists?("depp").should be(true)
     end
     
     it "should return false, if user does not exist" do
       @adm.should_receive(:capture).with("cat /etc/passwd", {}).and_return("nobody:x:60001:60001:NFS Anonymous Access User:/:\nmm:x:101::/export/home/mm:/usr/bin/bash\n")
-      @adm.user_exists?("apl").should be(false)
+      @adm.user_exists?("depp").should be(false)
     end
   end
   

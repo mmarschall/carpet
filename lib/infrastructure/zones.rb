@@ -22,6 +22,11 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure(:package, "SUNWman", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWwget", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWgnu-coreutils", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure(:package, "SUNWgnu-gettext", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure :package, "SUNWlxml"
+    assure :package, "SUNWgnu-libiconv"
+    adm.ln("/usr/gnu/lib/libiconv.so.2", "/usr/lib/libiconv.so.2") # needed as /usr/gnu/lib is not in libary load path
+    assure :package, "SUNWzlib"
     assure(:package, "SUNWgmake", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWgtar", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWggrp", zone_options.merge({:via => :zlogin, :zone => zone_name}))

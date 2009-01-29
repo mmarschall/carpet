@@ -21,7 +21,7 @@ module Adm
   end
   
   def user_exists?(username, options={})
-      capture("cat /etc/passwd", options).include?("apl:x:")
+      capture("cat /etc/passwd", options).include?("#{username}:x:")
   end
   
   # useradd needs the variable 'keys' (the users ssh keys going to authorized_keys file) set and uses the following options:
@@ -29,6 +29,7 @@ module Adm
   # :profiles => e.g. "Primary Administrator", the profile the user should be able to use
   # :user_roles => e.g. "root", the roles the user should be part of
   # :group => e.g. "staff", the group the user should be part of
+  # :no_keys => true, if set, the user will be installed without any keys (like a user for a service)
   # It makes sure the user gets /usr/bin/bash as his shell and creates his home dir at /export/home
   # If you pass in :via => :zlogin, :zone => "bla" the user will created within the given zone
   def useradd(username, options={})
@@ -39,8 +40,12 @@ module Adm
     assure(:directory, "/export/home", options)
     pfexec("/usr/sbin/useradd -d /export/home/#{username}#{uid_opts}#{profile_opts}#{role_opts} -m -g #{group} -s /usr/bin/bash #{username}", options) unless user_exists?(username, options)
     unlock_user(username, default_password_hash, options) if exists?(:default_password_hash)
-    ssh_keys(username, keys, options.merge(:group => group))
+    ssh_keys(username, keys, options.merge(:group => group)) unless options[:no_keys]
     assure(:file, "/etc/sudoers", capture("pfexec cat /etc/sudoers", options) << "\n#{username} ALL=(ALL) NOPASSWD: ALL", options.merge(:mode => "440", :owner => "root", :group => "root")) if options[:sudoers]
+  end
+  
+  def groupadd(groupname, options={})
+    pfexec("/usr/sbin/groupadd #{groupname} || true", options)
   end
   
   def unlock_user(username, password, options={})

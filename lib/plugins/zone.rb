@@ -52,16 +52,12 @@ module Zone
   end
 
   def configure_net(name, options={})
-    ipaddress = options.delete(:ipaddress)
+    ipaddresses = options.delete(:ipaddress).to_a
     interface = options.delete(:interface)
     cfg = capture("/usr/sbin/zonecfg -z #{name} info net", options)
-    if cfg.empty?
+    pfexec("/usr/sbin/zonecfg -z #{name} remove -F net") unless cfg.empty?
+    ipaddresses.each do |ipaddress|
       pfexec("/usr/sbin/zonecfg -z #{name} \"add net; set physical=#{interface}; set address=#{ipaddress}; end\"", options)
-    else
-      unless (cfg.include?("physical: #{interface}") && cfg.include?("address: #{ipaddress}"))
-        current_physical = cfg.split(" ")[4]
-        pfexec("/usr/sbin/zonecfg -z #{name} \"select net physical=#{current_physical}; set physical=#{interface}; set address=#{ipaddress}; end\"", options)
-      end
     end
   end
 

@@ -42,7 +42,7 @@ def assure(type, *args, &block)
 end
 
 def node(name, type, params={})
-  node = params[:ipaddress] || name
+  node = params[:ipaddress].to_a[0] || name
   set(:nfs_server, node) if params[:nfs_server]
   if node != name
     params[:name] = name
@@ -120,6 +120,15 @@ def find_node_by_param(param, value)
   result
 end
 
+def find_node_by_ipaddress(ipaddress)
+  result = nil
+  with_env('HOSTS', nil) do
+    servers = find_servers()
+    result = servers.select { |server| server.options[:ipaddress].to_a.include?(ipaddress) }.first
+  end
+  result
+end
+
 def current_host
   current_node.host
 end
@@ -128,7 +137,7 @@ def current_node
   result = nil
   ipaddress = ENV['HOSTS']
   with_env('HOSTS', nil) do
-    result = find_node_by_param(:ipaddress, ipaddress)
+    result = find_node_by_ipaddress(ipaddress)
   end
   result
 end

@@ -15,10 +15,6 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :match, "gem --version", "1.3.1" do
       src.install("http://rubyforge.org/frs/download.php/45905/rubygems-1.3.1.tgz", :install_cmd => "pfexec ruby ./setup.rb")
     end
-    assure :package, "SUNWlxml"
-    assure :package, "SUNWgnu-libiconv"
-    adm.ln("/usr/gnu/lib/libiconv.so.2", "/usr/lib/libiconv.so.2") # needed as /usr/gnu/lib is not in libary load path
-    assure :package, "SUNWzlib"
     assure :package, "SUNWimagick"
     assure :package, "SUNWmysql5"
     assure :package, "SUNWsvn"
