@@ -148,7 +148,7 @@ def rake(task, options={})
 end
 
 def schedule_rake_task(task, params={})
-  "#{params[:minute] || "*"} #{params[:hour] || "*"} #{params[:day_of_month] || "*"} #{params[:month] || "*"} #{params[:day_of_week] || "*"} /usr/local/bin/ruby /usr/local/bin/rake RAILS_ENV=#{deploy_env} --trace --rakefile #{current_path}/Rakefile --libdir=#{current_path} #{task} > #{shared_path}/log/crontab.log 2>&1\n"
+  "#{params[:minute] || "*"} #{params[:hour] || "*"} #{params[:day_of_month] || "*"} #{params[:month] || "*"} #{params[:day_of_week] || "*"} /usr/local/bin/ruby /usr/local/bin/rake RAILS_ENV=#{deploy_env} --trace --rakefile #{current_path}/Rakefile --libdir=#{current_path} #{task} >> #{shared_path}/log/crontab.log 2>&1\n"
 end
 
 # TODO: SOLARIS specific stuff should go somewhere else
