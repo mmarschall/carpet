@@ -38,6 +38,7 @@ module Adm
     role_opts = options[:user_roles].nil? ? "" : " -R \"#{options.delete(:user_roles)}\""
     group = options[:group] || "staff"
     assure(:directory, "/export/home", options)
+    assure(:directory, "/export/home/#{username}", {:owner => username, :group => group, :mode => 755})
     pfexec("/usr/sbin/useradd -d /export/home/#{username}#{uid_opts}#{profile_opts}#{role_opts} -m -g #{group} -s /usr/bin/bash #{username}", options) unless user_exists?(username, options)
     unlock_user(username, default_password_hash, options) if exists?(:default_password_hash)
     ssh_keys(username, keys, options.merge(:group => group)) unless options[:no_keys]
