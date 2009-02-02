@@ -5,6 +5,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     assure :file, "/etc/apache2/2.2/conf.d/vhost.conf", render(vhost_conf_erb, {
       :hostname => capture("hostname").strip,
+      :mongrel_start_port => fetch(:mongrel_start_port, 8000),
       :web_servers => roles[:web].servers,
       :app_servers => roles[:app].servers,
       :apache_log_dir => "/var/apache2/2.2/logs",

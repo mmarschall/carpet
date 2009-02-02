@@ -34,6 +34,11 @@ module Svc
     pfexec("/usr/sbin/svcadm enable #{svc}", options)
   end
   
+  def disable(svc, options={})
+    svc = "svc:/" + svc unless svc.match(/^svc:\/.*/)
+    pfexec("/usr/sbin/svcadm disable #{svc}", options)
+  end
+  
   def setprop(svc, prop, value, options={})
     svc = "svc:/" + svc unless svc.match(/^svc:\/.*/)
     pfexec("/usr/sbin/svccfg -s #{svc} setprop #{prop} = #{value}", options)
