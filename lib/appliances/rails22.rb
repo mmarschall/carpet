@@ -1,7 +1,7 @@
 Capistrano::Configuration.instance(:must_exist).load do 
   task :rails22 do
     rails_default_permissions = {:owner => application_user, :group => "staff", :mode => 775}
-    assure :directory, "#{shared_path}", fetch(:default_permissions, rails_default_permissions)
+    assure :directory, "#{shared_path}", {:owner => application_user, :group => "staff", :mode => 755}
     assure :directory, "#{shared_path}/log", fetch(:default_permissions, rails_default_permissions)
     assure :directory, "#{shared_path}/config", fetch(:default_permissions, rails_default_permissions)
     assure :directory, "#{shared_path}/config/environments", fetch(:default_permissions, rails_default_permissions)
