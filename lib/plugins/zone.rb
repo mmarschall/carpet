@@ -104,7 +104,7 @@ nfs4_domain=dynamic
     start(name, options)
     if sysidcfg_changed?(name, sysidcfg, options)
       assure(:file, "/zones/#{name}/root/etc/sysidcfg", sysidcfg, options)
-      restart(name, options)
+      throw Exception.new("zone #{name} needs to be restarted for sysidcfg changes to take effect!")
     end
     svc.wait_for("network/ssh", options.merge({:via => :zlogin, :zone => name, :timeout => 120}))
     resolv_conf = "domain #{domain}\n"
