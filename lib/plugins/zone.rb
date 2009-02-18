@@ -37,7 +37,7 @@ module Zone
 
   def configure_memory(name, options={})
     mem = options.delete(:mem) || "512M"
-    swap = options.delete(:swap) || "512M"
+    swap = options.delete(:swap) || "1024M"
     mem.upcase!
     swap.upcase!
     cfg = capture("/usr/sbin/zonecfg -z #{name} info capped-memory", options)
