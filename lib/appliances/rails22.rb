@@ -7,6 +7,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :directory, "#{shared_path}/config/environments", fetch(:default_permissions, rails_default_permissions)
     assure :directory, "#{shared_path}/tmp", fetch(:default_permissions, rails_default_permissions)
     assure :match, "ruby --version", /1.8.7/ do
+      pkg.set_authority("pending", "http://pkg.opensolaris.org/pending/") unless pkg.authority?("pending")
+      assure :package, "readline5"
       src.install("ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p72.tar.gz", :configure_opts => "--without-gcc")
     end
     assure :command, :git do
