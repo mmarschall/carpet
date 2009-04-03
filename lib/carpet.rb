@@ -10,6 +10,7 @@ require 'plugins/svc'
 require 'plugins/adm'
 require 'plugins/nfs'
 require 'plugins/cpan'
+require 'plugins/nagios'
 
 # infrastructure
 require "infrastructure/zones"
@@ -56,6 +57,21 @@ def node(name, type, params={})
     end
     need_type(node, type)
   end
+  add_services_to_nagios_server(name, params[:ipaddress].to_a[0], type, params[:nagios_services]) if params[:nagios_services]
+end
+
+def add_services_to_nagios_server(node_name, ipaddress, type, nagios_services)
+  with_env("HOSTS", ipaddress) do
+    assure(:match, "/usr/local/nagios/libexec/check_users -w 100 -c 100", /OK/) do
+      nagios.install_plugins()
+    end
+  end
+  nagios.add_host(node_name, ipaddress)
+  nagios.add_hostgroup(type, roles[type].servers.collect {|server| server.options[:name]}.join(","))
+  nagios_services.each do |service, service_details|
+    nagios.add_service(service, type, service_details)
+  end
+  nagios.restart!
 end
 
 def need_host_for_node(node, hosted_on)

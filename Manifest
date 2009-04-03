@@ -9,6 +9,7 @@ lib/carpet.rb
 lib/infrastructure/zones.rb
 lib/plugins/adm.rb
 lib/plugins/cpan.rb
+lib/plugins/nagios.rb
 lib/plugins/nfs.rb
 lib/plugins/pkg.rb
 lib/plugins/src.rb
