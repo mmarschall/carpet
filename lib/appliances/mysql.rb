@@ -20,6 +20,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     ftp_backup_host = current_node.options[:ftp_backup_host]
     ftp_user = current_node.options[:ftp_user]
     ftp_password = current_node.options[:ftp_password]
+    enable_backup = current_node.options[:enable_ftp_backup]
     if ftp_backup_host && ftp_user && ftp_password
       logger.info("Setting up daily mysqldump backup for database '#{db_name}' to FTP server '#{ftp_backup_host}' with user '#{ftp_user}'")
       assure :file, "/export/home/#{application_user}/.netrc", "machine #{ftp_backup_host} login #{ftp_user} password #{ftp_password}", :mode => 600
@@ -36,7 +37,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       EOSH
       assure :file, "/export/home/#{application_user}/backup.sh", backup_sh, :mode => 755
     
-      if current_node.options[:primary]
+      if current_node.options[:primary] && enable_backup
         assure :file, "my_crontab", "13 3 * * * /export/home/#{application_user}/backup.sh >> /export/home/#{application_user}/mysql_backup.log 2>&1"
         invoke_command("crontab my_crontab; rm my_crontab")
       end

@@ -18,6 +18,7 @@ define host{
   notification_period 24x7
   notification_options d,r
   contact_groups admins
+  action_url /nagios/pnp/index.php?host=$HOSTNAME$' onmouseover="get_g('$HOSTNAME$','_HOST_')" onmouseout="clear_g()"
 } 
     CFG
     put(host_cfg, "#{nagios_objects_dir}/#{host}.cfg",:hosts => nagios_server)
@@ -45,6 +46,7 @@ define service{
   check_command check_#{service_details[:via] ? "by_ssh_" : ""}#{service}#{check_command_params}
   use generic-service
   notification_interval 0 ;
+  action_url /nagios/pnp/index.php?host=$HOSTNAME$&srv=$SERVICEDESC$' onmouseover="get_g('$HOSTNAME$','$SERVICEDESC$')" onmouseout="clear_g()"
 }
     CFG
     put(service_cfg, "#{nagios_objects_dir}/#{service}_on_#{hostgroup}.cfg", :hosts => nagios_server)
