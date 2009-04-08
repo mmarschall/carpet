@@ -43,17 +43,21 @@ define hostgroup{
 define service{
   hostgroup_name #{hostgroup}
   service_description #{service_details[:description]||service}
-  check_command check_#{service_details[:via] ? "by_ssh_" : ""}#{service}#{check_command_params}
+  check_command check_#{service_details[:via] ? "by_ssh_" : ""}#{service_details[:check]||service}#{check_command_params}
   use generic-service
   notification_interval 0 ;
   action_url /nagios/pnp/index.php?host=$HOSTNAME$&srv=$SERVICEDESC$' onmouseover="get_g('$HOSTNAME$','$SERVICEDESC$')" onmouseout="clear_g()"
 }
     CFG
-    put(service_cfg, "#{nagios_objects_dir}/#{service}_on_#{hostgroup}.cfg", :hosts => nagios_server)
+    with_env("HOSTS", nagios_server) do
+      put(service_cfg, "#{nagios_objects_dir}/#{service}_on_#{hostgroup}.cfg")
+    end
   end
   
   def restart!
-    sudo("/etc/init.d/nagios restart", :hosts => nagios_server)
+    with_env("HOSTS", nagios_server) do
+      sudo("/etc/init.d/nagios restart", :hosts => nagios_server)
+    end
   end
 end
 Capistrano.plugin :nagios, Nagios

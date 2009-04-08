@@ -65,6 +65,9 @@ def add_services_to_nagios_server(node_name, ipaddress, type, nagios_services)
     assure(:match, "/usr/local/nagios/libexec/check_users -w 100 -c 100", /OK/) do
       nagios.install_plugins()
     end
+    assure(:file, "/usr/local/nagios/libexec/check_cpu_stats.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_cpu_stats.sh"), :mode => 755)
+    assure(:file, "/usr/local/nagios/libexec/check_smf.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_smf.sh"), :mode => 755)
+    assure(:file, "/usr/local/nagios/libexec/check_proc_mem.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_proc_mem.sh"), :mode => 755)
   end
   nagios.add_host(node_name, ipaddress)
   nagios.add_hostgroup(type, roles[type].servers.collect {|server| server.options[:name]}.join(","))
