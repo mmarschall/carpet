@@ -1,9 +1,9 @@
 Capfile
 CHANGELOG
 lib/appliances/apache_lb.rb
-lib/appliances/memcached.rb
+lib/appliances/memcache.rb
+lib/appliances/mongrel_cluster.rb
 lib/appliances/mysql.rb
-lib/appliances/rails23.rb
 lib/capistrano/deploy/remote_dependency.rb
 lib/carpet.rb
 lib/infrastructure/zones.rb

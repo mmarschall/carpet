@@ -17,9 +17,9 @@ require "infrastructure/zones"
 
 # appliances
 require "appliances/apache_lb"
-require "appliances/rails23"
+require "appliances/mongrel_cluster"
 require "appliances/mysql"
-require "appliances/memcached"
+require "appliances/memcache"
 
 # Temporarily sets an environment variable, yields to a block, and restores
 # the value when it is done.
