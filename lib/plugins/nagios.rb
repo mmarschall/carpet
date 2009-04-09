@@ -34,14 +34,14 @@ define hostgroup{
     put(hostgroup_cfg, "#{nagios_objects_dir}/#{hostgroup}.cfg", :hosts => nagios_server)
   end
   
-  def add_service(service, hostgroup, service_details)
+  def add_service(service, host, service_details)
     check_command_params = ""
     check_command_params << "!#{service_details[:warn]}" if service_details[:warn]
     check_command_params << "!#{service_details[:critical]}" if service_details[:critical]
     check_command_params << "!#{service_details[:additional_params]}" if service_details[:additional_params]
     service_cfg = <<-CFG
 define service{
-  hostgroup_name #{hostgroup}
+  host_name #{host}
   service_description #{service_details[:description]||service}
   check_command check_#{service_details[:via] ? "by_ssh_" : ""}#{service_details[:check]||service}#{check_command_params}
   use generic-service
@@ -50,7 +50,7 @@ define service{
 }
     CFG
     with_env("HOSTS", nagios_server) do
-      put(service_cfg, "#{nagios_objects_dir}/#{service}_on_#{hostgroup}.cfg")
+      put(service_cfg, "#{nagios_objects_dir}/#{service}_on_#{host}.cfg")
     end
   end
   

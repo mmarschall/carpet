@@ -72,7 +72,7 @@ def add_services_to_nagios_server(node_name, ipaddress, type, nagios_services)
   nagios.add_host(node_name, ipaddress)
   nagios.add_hostgroup(type, roles[type].servers.collect {|server| server.options[:name]}.join(","))
   nagios_services.each do |service, service_details|
-    nagios.add_service(service, type, service_details)
+    nagios.add_service(service, node_name, service_details)
   end
   nagios.restart!
 end
