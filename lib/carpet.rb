@@ -56,8 +56,8 @@ def node(name, type, params={})
       assure_zone_on_host(name, hosted_on, params)
     end
     need_type(node, type)
+    add_services_to_nagios_server(name, params[:ipaddress].to_a[0], type, params[:nagios_services]) if params[:nagios_services]
   end
-  add_services_to_nagios_server(name, params[:ipaddress].to_a[0], type, params[:nagios_services]) if params[:nagios_services]
 end
 
 def add_services_to_nagios_server(node_name, ipaddress, type, nagios_services)
@@ -69,7 +69,9 @@ def add_services_to_nagios_server(node_name, ipaddress, type, nagios_services)
     assure(:file, "/usr/local/nagios/libexec/check_smf.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_smf.sh"), :mode => 755)
     assure(:file, "/usr/local/nagios/libexec/check_proc_mem.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_proc_mem.sh"), :mode => 755)
   end
-  nagios.add_host(node_name, ipaddress)
+  roles[type].servers.each do |server|
+    nagios.add_host(server.options[:name], server.options[:ipaddress])
+  end
   nagios.add_hostgroup(type, roles[type].servers.collect {|server| server.options[:name]}.join(","))
   nagios_services.each do |service, service_details|
     nagios.add_service(service, node_name, service_details)
