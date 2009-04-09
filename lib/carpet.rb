@@ -17,7 +17,7 @@ require "infrastructure/zones"
 
 # appliances
 require "appliances/apache_lb"
-require "appliances/rails22"
+require "appliances/rails23"
 require "appliances/mysql"
 require "appliances/memcached"
 
