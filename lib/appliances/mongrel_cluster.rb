@@ -48,7 +48,15 @@ Capistrano::Configuration.instance(:must_exist).load do
     
     mongrel_start_port = get_attribute(:mongrel_start_port, 8000)
     mongrel_servers = get_attribute(:mongrel_servers, 4)
+    mongrel_mem_warning = get_attribute(:mongrel_mem_warning, 300000)
+    mongrel_mem_critical = get_attribute(:mongrel_mem_critical, 350000)
     assure(:file, "#{shared_path}/config/mongrel_cluster.yml", render("mongrel_cluster.yml.erb", { :port => mongrel_start_port, :servers => mongrel_servers}), rails_default_permissions)
+    if fetch(nagios_server, nil) && current_node.options(:nagios_services)
+      mongrel_servers.to_i.times do |i|
+        port = mongrel_start_port.to_i + i
+        nagios.add_service("proc_mem_#{port}", current_node.options[:name], {:check => :proc_mem, :via => :ssh, :warn => mongrel_mem_warning, :critical => mongrel_mem_critical, :description => "MEM mongrel #{port}", :additional_params => "mongrel.*#{port}"})
+      end
+    end
     
     assure(:file, "/var/svc/manifest/#{application}-smf.xml", render("mongrel_smf.xml.erb", { :service_name => application, :working_directory => current_path}), rails_default_permissions)
     svc.import_cfg_for("#{application}-smf")
