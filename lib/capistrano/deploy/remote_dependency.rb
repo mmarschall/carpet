@@ -69,7 +69,7 @@ module Capistrano
         unless check_for_gem(name, version, options).pass?
           gem_opts = options.delete(:gem_opts)
           options.merge!(:via => configuration.fetch(:run_method, :sudo)) unless options.include?(:via)
-          configuration.invoke_command("gem install #{name} --no-rdoc --no-ri --version #{version}#{' '+gem_opts unless gem_opts.nil?}", options)
+          configuration.invoke_command("gem install #{name} --no-rdoc --no-ri --version '#{version}'#{' '+gem_opts unless gem_opts.nil?}", options)
         end
         @success = true
         self

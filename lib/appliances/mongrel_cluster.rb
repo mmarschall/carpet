@@ -21,7 +21,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :package, "SUNWmysql5"
     assure :package, "SUNWsvn"
     
-    assure :gem, "hoe", "1.8.2"
+    assure :gem, "hoe", ">= 1.8.2"
     assure :gem, "mini_magick", "1.2.3"
     assure :gem, "rubyzip", "0.9.1"
     assure :gem, "rack", "0.9.1"
