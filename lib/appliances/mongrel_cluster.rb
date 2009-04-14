@@ -74,5 +74,9 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure(:file, "#{shared_path}/config/database.yml", render("database.yml.erb", {
       :db_host => get_attribute(:db_host, find_node_by_param(:mysql_master, true).host)
     }), rails_default_permissions)
+
+    template = get_attribute(:environment_config_template, "#{deploy_env}.rb.erb")
+    params = get_attribute(:environment_config_params, {}).merge(:memcached_address => "#{current_node.options[:memcached_address]}:11211")
+    assure(:file, "#{shared_path}/config/environments/#{deploy_env}.rb", render(template, params), rails_default_permissions)
   end
 end
