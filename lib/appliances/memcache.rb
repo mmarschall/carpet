@@ -1,8 +1,8 @@
 Capistrano::Configuration.instance(:must_exist).load do 
   task :memcache do
-    size = current_node.options[:memcached_size] || fetch(:memcached_size, "1024")
-    port = current_node.options[:memcached_port] || fetch(:memcached_port, "11211")
-    user = current_node.options[:memcached_user] || fetch(:memcached_user, "nobody")
+    size = get_attribute(:memcached_size, "1024")
+    port = get_attribute(:memcached_port, "11211")
+    user = get_attribute(:memcached_user, "nobody")
     
     assure :package, "SUNWmemcached"
     svc.setprop("svc:/application/database/memcached", "memcached/options", "'(\"-u\" \"#{user}\" \"-m\" \"#{size}\" \"-p\" \"#{port}\")'")

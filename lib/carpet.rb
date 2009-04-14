@@ -60,6 +60,10 @@ def node(name, type, params={})
   end
 end
 
+def get_attribute(name, default_value)
+  current_node.options[name.to_sym] || fetch(name.to_sym, default_value)
+end
+
 def add_services_to_nagios_server(node_name, ipaddress, type, nagios_services)
   with_env("HOSTS", ipaddress) do
     assure(:match, "/usr/local/nagios/libexec/check_users -w 100 -c 100", /OK/) do
@@ -113,6 +117,7 @@ end
 def render(path, vars={})
   b = binding
   vars.each { |key, value| eval("#{key} = vars[:#{key}] || vars['#{key}']", b) }
+  path = "#{File.dirname(__FILE__)}/../resources/#{path}" if not File.exists?(path)
   ERB.new(File.read(path)).result(b)
 end
 

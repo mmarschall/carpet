@@ -37,5 +37,11 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :gem, "rspec", "1.2.2"
     assure :gem, "rspec-rails", "1.2.2"
     assure :gem, "cucumber", "0.1.15"
+    
+    mongrel_start_port = get_attribute(:mongrel_start_port, 8000)
+    mongrel_servers = get_attribute(:mongrel_servers, 4)
+    assure(:file, "#{shared_path}/config/mongrel_cluster.yml", render("mongrel_cluster.yml.erb", { :port => mongrel_start_port, :servers => mongrel_servers}), rails_default_permissions)
+    
+    assure(:file, "/var/svc/manifest/#{application}-smf.xml", render("mongrel_smf.xml.erb", { :service_name => application, :working_directory => current_path}), default_permissions)
   end
 end
