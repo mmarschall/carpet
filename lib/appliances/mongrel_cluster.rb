@@ -46,6 +46,15 @@ Capistrano::Configuration.instance(:must_exist).load do
       assure(:directory, dir, permissions)
     end
     
+    if current_node.options[:primary]
+      crontab = ""
+      get_attribute(:scheduled_rake_tasks, {}).each do |task, timing|
+        crontab << schedule_rake_task(task, timing)
+      end
+      assure(:file, "/export/home/#{application_user}/custom_crontab", crontab)
+      run("/usr/bin/crontab custom_crontab; rm custom_crontab")
+    end
+
     mongrel_start_port = get_attribute(:mongrel_start_port, 8000)
     mongrel_servers = get_attribute(:mongrel_servers, 4)
     mongrel_mem_warning = get_attribute(:mongrel_mem_warning, 300000)
