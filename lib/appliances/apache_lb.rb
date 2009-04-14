@@ -3,6 +3,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :service, "network/http:apache22", :package => "SUNWapch22"
     assure :package, "SUNWapch22m-dtrace"
 
+    assure :command, :git do
+      src.install("http://kernel.org/pub/software/scm/git/git-1.6.1.tar.gz")
+    end
+
     assure :file, "/etc/apache2/2.2/conf.d/vhost.conf", render(vhost_conf_erb, {
       :hostname => capture("hostname").strip,
       :mongrel_start_port => fetch(:mongrel_start_port, 8000),

@@ -34,6 +34,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure(:package, "SUNWperl584core", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWperl584usr", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWperl584man", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure(:file, "/export/home/#{application_user}/.ssh/known_hosts", get_attribute(:known_hosts,""))
   end
 end
 
