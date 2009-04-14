@@ -1,5 +1,4 @@
 Capfile
-carpet.gemspec
 CHANGELOG
 lib/appliances/apache_lb.rb
 lib/appliances/memcache.rb
@@ -22,6 +21,7 @@ Rakefile
 README
 resources/Config.pm
 resources/mongrel_cluster.yml.erb
+resources/mongrel_smf.xml.erb
 resources/nagios-plugins/check_cpu_stats.sh
 resources/nagios-plugins/check_proc_mem.sh
 resources/nagios-plugins/check_smf.sh
