@@ -20,6 +20,7 @@ Manifest
 Rakefile
 README
 resources/Config.pm
+resources/database.yml.erb
 resources/mongrel_cluster.yml.erb
 resources/mongrel_smf.xml.erb
 resources/nagios-plugins/check_cpu_stats.sh

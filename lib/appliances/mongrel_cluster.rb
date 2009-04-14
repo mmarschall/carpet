@@ -44,5 +44,9 @@ Capistrano::Configuration.instance(:must_exist).load do
     
     assure(:file, "/var/svc/manifest/#{application}-smf.xml", render("mongrel_smf.xml.erb", { :service_name => application, :working_directory => current_path}), rails_default_permissions)
     svc.import_cfg_for("#{application}-smf")
+
+    assure(:file, "#{shared_path}/config/database.yml", render("database.yml.erb", {
+      :db_host => get_attribute(:db_host, find_node_by_param(:mysql_master, true).host)
+    }), rails_default_permissions)
   end
 end
