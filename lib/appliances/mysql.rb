@@ -25,18 +25,18 @@ Capistrano::Configuration.instance(:must_exist).load do
       logger.info("Setting up daily mysqldump backup for database '#{db_name}' to FTP server '#{ftp_backup_host}' with user '#{ftp_user}'")
       assure :file, "/export/home/#{application_user}/.netrc", "machine #{ftp_backup_host} login #{ftp_user} password #{ftp_password}", :mode => 600
       backup_sh = <<-EOSH
-        #!/bin/sh
-        FILE=mysql-#{db_name}-$(date +"%d-%m-%Y-%Hh%Mm%Ss").sql.gz
-        /usr/mysql/bin/mysqldump -u root -h localhost -p#{mysql_root_password} --flush-logs #{db_name} | /usr/bin/gzip -9 > /tmp/$FILE
-        ftp #{ftp_backup_host} <<EOF
-        put /tmp/$FILE $FILE
-        quit
-        EOF
-        rm /tmp/$FILE
-        exit 0
+#!/bin/sh
+FILE=mysql-#{db_name}-$(date +"%d-%m-%Y-%Hh%Mm%Ss").sql.gz
+/usr/mysql/bin/mysqldump -u root -h localhost -p#{mysql_root_password} --flush-logs #{db_name} | /usr/bin/gzip -9 > $FILE
+ftp #{ftp_backup_host} <<EOF
+put $FILE $FILE
+quit
+EOF
+rm $FILE
+exit 0
       EOSH
       assure :file, "/export/home/#{application_user}/backup.sh", backup_sh, :mode => 755
-    
+
       if current_node.options[:primary] && enable_backup
         assure :file, "my_crontab", "13 3 * * * /export/home/#{application_user}/backup.sh >> /export/home/#{application_user}/mysql_backup.log 2>&1"
         invoke_command("crontab my_crontab; rm my_crontab")
