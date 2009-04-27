@@ -14,6 +14,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure(:file, "/export/home/#{application_user}/.profile", dot_profile, :via => :zlogin, :zone => zone_name) if exists?(:dot_profile)
     assure(:file, "/export/home/#{application_user}/.bashrc", dot_bashrc, :via => :zlogin, :zone => zone_name) if exists?(:dot_bashrc)
     assure(:file, "/export/home/#{application_user}/.bash_profile", ". ~/.profile\n. ~/.bashrc", :via => :zlogin, :zone => zone_name) if exists?(:dot_bashrc) && exists?(:dot_profile)
+    assure(:package, "SUNWtop", zone_options.merge({:via => :zlogin, :zone => zone_name}))
+    assure(:package, "SUNWcurl", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:package, "SUNWloc", zone_options.merge({:via => :zlogin, :zone => zone_name})) # locale support
     assure(:package, "SUNWuiu8", zone_options.merge({:via => :zlogin, :zone => zone_name})) # iconv modules for UTF-8 locale (required by GLoc)
     assure(:package, "SUNWlang-enUS", zone_options.merge({:via => :zlogin, :zone => zone_name})) # en_US.UTF-8 locale
