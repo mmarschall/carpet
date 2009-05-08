@@ -30,6 +30,7 @@ module Adm
   # :user_roles => e.g. "root", the roles the user should be part of
   # :group => e.g. "staff", the group the user should be part of
   # :no_keys => true, if set, the user will be installed without any keys (like a user for a service)
+  # :sudoers => true, if set, the user will be added to the sudoers file enabling him to use sudo without password
   # It makes sure the user gets /usr/bin/bash as his shell and creates his home dir at /export/home
   # If you pass in :via => :zlogin, :zone => "bla" the user will created within the given zone
   def useradd(username, options={})

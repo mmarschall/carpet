@@ -6,15 +6,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :directory, "#{shared_path}/config", fetch(:default_permissions, rails_default_permissions)
     assure :directory, "#{shared_path}/config/environments", fetch(:default_permissions, rails_default_permissions)
     assure :directory, "#{shared_path}/tmp", fetch(:default_permissions, rails_default_permissions)
-    assure :match, "ruby --version", /ruby 1.8.7 (2008-08-11 patchlevel 160)/ do
+    assure :match, "ruby --version", /ruby 1\.8\.7 \(2008-08-11 patchlevel 72\)/ do
       pkg.set_authority("pending", "http://pkg.opensolaris.org/pending/") unless pkg.authority?("pending")
       assure :package, "readline5"
-      patch = <<-PATCH
-27a28
-> #include "fcntl.h"
-      PATCH
-      assure :file, "patch.txt", patch
-      src.install("ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p160.tar.gz", :install_cmd => "CC=cc ./configure --without-gcc && patch -i ../patch.txt file.c && gmake && pfexec gmake install")
+      src.install("ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p72.tar.gz", :configure_opts => "--without-gcc")
     end
     assure :command, :git do
       src.install("http://kernel.org/pub/software/scm/git/git-1.6.1.tar.gz")
