@@ -64,7 +64,7 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
     mongrel_mem_warning = get_attribute(:mongrel_mem_warning, 300000)
     mongrel_mem_critical = get_attribute(:mongrel_mem_critical, 350000)
     assure(:file, "#{shared_path}/config/mongrel_cluster.yml", render("mongrel_cluster.yml.erb", { :port => mongrel_start_port, :servers => mongrel_servers}), rails_default_permissions)
-    if fetch(nagios_server, nil) && current_node.options(:nagios_services)
+    if fetch(:nagios_server, nil) && current_node.options[:nagios_services]
       mongrel_servers.to_i.times do |i|
         port = mongrel_start_port.to_i + i
         nagios.add_service("proc_mem_#{port}", current_node.options[:name], {:check => :proc_mem, :via => :ssh, :warn => mongrel_mem_warning, :critical => mongrel_mem_critical, :description => "MEM mongrel #{port}", :additional_params => "mongrel.*#{port}"})
