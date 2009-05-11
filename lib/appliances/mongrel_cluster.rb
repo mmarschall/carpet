@@ -79,8 +79,12 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
       :db_host => get_attribute(:db_host, find_node_by_param(:mysql_master, true).host)
     }), rails_default_permissions)
 
+    upload_environment_config
+  end
+
+  def upload_environment_config
     template = get_attribute(:environment_config_template, "#{deploy_env}.rb.erb")
     params = get_attribute(:environment_config_params, {}).merge(:memcached_address => "#{current_node.options[:memcached_address]}:11211")
-    assure(:file, "#{shared_path}/config/environments/#{deploy_env}.rb", render(template, params), rails_default_permissions)
+    assure(:file, "#{shared_path}/config/environments/#{deploy_env}.rb", render(template, params), fetch(:default_permissions))
   end
 end
