@@ -56,6 +56,8 @@ def node(name, type, params={})
       assure_zone_on_host(name, hosted_on, params)
     end
     need_type(node, type)
+    assure_nagios_scripts_on_host(hosted_on)
+    assure_nagios_scripts_on_node(params[:ipaddress].to_a[0]) if params[:nagios_services]
     add_services_to_nagios_server(name, params[:ipaddress].to_a[0], type, params[:nagios_services]) if params[:nagios_services]
   end
 end
@@ -65,14 +67,6 @@ def get_attribute(name, default_value)
 end
 
 def add_services_to_nagios_server(node_name, ipaddress, type, nagios_services)
-  with_env("HOSTS", ipaddress) do
-    assure(:match, "/usr/local/nagios/libexec/check_users -w 100 -c 100", /OK/) do
-      nagios.install_plugins()
-    end
-    assure(:file, "/usr/local/nagios/libexec/check_cpu_stats.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_cpu_stats.sh"), :mode => 755)
-    assure(:file, "/usr/local/nagios/libexec/check_smf.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_smf.sh"), :mode => 755)
-    assure(:file, "/usr/local/nagios/libexec/check_proc_mem.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_proc_mem.sh"), :mode => 755)
-  end
   roles[type].servers.each do |server|
     nagios.add_host(server.options[:name], server.options[:ipaddress])
   end
@@ -81,6 +75,24 @@ def add_services_to_nagios_server(node_name, ipaddress, type, nagios_services)
     nagios.add_service(service, node_name, service_details)
   end
   nagios.restart!
+end
+
+def assure_nagios_scripts_on_node(ipaddress)
+  with_env("HOSTS", ipaddress) do
+    assure(:match, "/usr/local/nagios/libexec/check_users -w 100 -c 100", /OK/) do
+      nagios.install_plugins()
+    end
+    assure(:file, "/usr/local/nagios/libexec/check_cpu_stats.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_cpu_stats.sh"), :mode => 755)
+    assure(:file, "/usr/local/nagios/libexec/check_smf.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_smf.sh"), :mode => 755)
+    assure(:file, "/usr/local/nagios/libexec/check_proc_mem.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_proc_mem.sh"), :mode => 755)
+  end
+end
+
+def assure_nagios_scripts_on_host(host)
+  with_env("HOSTS", find_param_by_node_name(:ipaddress, host)) do
+    assure(:file, "/usr/local/nagios/libexec/check_zone_cpu.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_zone_cpu.sh"), :mode => 755)
+    assure(:file, "/usr/local/nagios/libexec/check_zone_mem.sh", File.read("#{File.dirname(__FILE__)}/../resources/nagios-plugins/check_zone_mem.sh"), :mode => 755)
+  end
 end
 
 def need_host_for_node(node, hosted_on)
