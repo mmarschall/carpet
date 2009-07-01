@@ -20,6 +20,7 @@ require "infrastructure/zones"
 require "appliances/apache_lb"
 require "appliances/haproxy"
 require "appliances/mongrel_cluster"
+require "appliances/passenger_nginx_server"
 require "appliances/mysql"
 require "appliances/memcache"
 

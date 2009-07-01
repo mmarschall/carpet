@@ -17,6 +17,7 @@ Rakefile
 CHANGELOG
 Capfile
 resources/haproxy_smf.xml.erb
+resources/nginx.conf.erb
 resources/mongrel_smf.xml.erb
 resources/database.yml.erb
 resources/mongrel_cluster.yml.erb
@@ -24,9 +25,11 @@ resources/nagios-plugins/check_cpu_stats.sh
 resources/nagios-plugins/check_smf.sh
 resources/nagios-plugins/check_proc_mem.sh
 resources/Config.pm
+resources/nginx_smf.xml.erb
 lib/appliances/mongrel_cluster.rb
 lib/appliances/haproxy.rb
 lib/appliances/apache_lb.rb
+lib/appliances/passenger_nginx_server.rb
 lib/appliances/mysql.rb
 lib/appliances/memcache.rb
 lib/infrastructure/zones.rb

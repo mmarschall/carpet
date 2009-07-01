@@ -4,7 +4,7 @@ module Src
   def install(url, options={})
     assure :command, "cc" do
       pkg.install("SUNWfontconfig")
-      pkg.install("sunstudioexpress")
+      pkg.install("sunstudioexpress@0.2009.3.1-0.101")
     end
     configure_opts = options.delete(:configure_opts)
     tar_gz = url.split('/').last
