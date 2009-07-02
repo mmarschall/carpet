@@ -1,47 +1,31 @@
-#user  nobody;
 worker_processes  1;
-
-#error_log  logs/error.log;
-#error_log  logs/error.log  notice;
-#error_log  logs/error.log  info;
-
-#pid        logs/nginx.pid;
-
 
 events {
     worker_connections  1024;
 }
 
-
 http {
     passenger_root /usr/local/lib/ruby/gems/1.8/gems/passenger-2.2.4;
     passenger_ruby /usr/local/bin/ruby;
     passenger_max_pool_size <%= app_server_pool_size %>;
+    passenger_pool_idle_time 0;
+    rails_framework_spawner_idle_time 0;
+    rails_app_spawner_idle_time 0;
 
     include       mime.types;
     default_type  application/octet-stream;
 
-    #log_format  main  '$remote_addr - $remote_user [$time_local] $request '
-    #                  '"$status" $body_bytes_sent "$http_referer" '
-    #                  '"$http_user_agent" "$http_x_forwarded_for"';
-
-    #access_log  logs/access.log  main;
-
     sendfile        on;
-    #tcp_nopush     on;
 
-    #keepalive_timeout  0;
     keepalive_timeout  65;
 
-    #gzip  on;
-
-   server {
-      listen <%= app_server_port %>;
-      server_name <%= app_server_name %>;
-      root <%= application_directory %>/public;
-      passenger_enabled on;
-      passenger_use_global_queue on;
-      rails_env <%= deploy_env %>;
-      rails_spawn_method conservative;
-  }
+    server {
+        listen <%= app_server_port %>;
+        server_name <%= app_server_name %>;
+        root <%= application_directory %>/public;
+        passenger_enabled on;
+        passenger_use_global_queue on;
+        rails_env <%= deploy_env %>;
+        rails_spawn_method conservative;
+    }
 }
