@@ -19,6 +19,26 @@ http {
 
     keepalive_timeout  65;
 
+    # APACHE ->
+    # PERFORMANCE: Compress text output for compatible browsers 
+    #AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/x-javascript
+    #BrowserMatch ^Mozilla/4 gzip-only-text/html
+    #BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    #BrowserMatch \bMSIE !no-gzip !gziqp-only-text/html
+    #Header append Vary User-Agent
+    # NGINX ->
+    gzip  on;
+    gzip_http_version 1.1;
+    gzip_vary on;
+    gzip_comp_level 2;
+    gzip_proxied any;
+    gzip_types text/plain text/html text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+    # make sure gzip does not lose large gzipped js or css files
+    # see http://blog.leetsoft.com/2007/7/25/nginx-gzip-ssl
+    gzip_buffers 16 8k;
+    # Disable gzip for certain browsers.
+    gzip_disable "MSIE [1-6].(?!.*SV1)";
+
     server {
         listen <%= app_server_port %>;
         server_name <%= app_server_name %>;
@@ -27,5 +47,61 @@ http {
         passenger_use_global_queue on;
         rails_env <%= deploy_env %>;
         rails_spawn_method conservative;
+
+        # APACHE ->
+        #<% if deploy_env == "production" %>
+        # URL CONFORMITY: Rewrite everything not being "www.autoplenum.de" to "www.autoplenum.de"
+        #RewriteCond %{HTTP_HOST} !^www\.autoplenum\.de$ [NC]
+        #RewriteCond %{HTTP_HOST} !^gebrauchtwagen\.autoplenum\.de$ [NC]
+        #RewriteCond %{HTTP_HOST} !^$
+        #<%= web_servers.collect {|web| "RewriteCond %{HTTP_HOST} !^#{web.host}$" }.join("\n  ") %>
+        #RewriteRule ^/(.*) http://www.autoplenum.de/$1 [L,R=301]
+        #<% end %>
+        # NGINX -> TODO
+
+	# APACHE -> 
+        #RewriteCond %{HTTP_USER_AGENT} Panther
+        #RewriteRule ^.* - [L,F]
+        # NGINX -> is this still needed???
+
+	# APACHE ->
+        # MAINTENANCE: Redirect to 503.html returning 503 error code if maintenance page is there
+        #RewriteCond %{DOCUMENT_ROOT}/system/maintenance.html -f
+        #RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+        #RewriteCond %{SCRIPT_FILENAME} !503.html
+        #RewriteCond %{SCRIPT_FILENAME} !/images/plainlogo.gif
+        #RewriteCond %{SCRIPT_FILENAME} !/images/multiboxbg.gif
+        #RewriteRule ^.*$ /system/maintenance.html [PT]
+        #Redirect 503 /system/maintenance.html
+        #ErrorDocument 503 /503.html
+	# NGINX -> do we really need this here??? the balancer should handle 503 I guess
+
+        # APACHE ->
+        # BLOCK CONTENT THIEVE:
+        #RewriteCond %{REMOTE_ADDR} ^64\.72\.116\.208
+        #RewriteRule (.*) http://www.tylerschnaidt.com [R=301,L]
+	# NGINX -> TODO
+
+        # APACHE ->
+        # PERFORMANCE: Check for static index and cached pages. 
+        #RewriteRule ^/$ /index.html [QSA] 
+        #RewriteRule ^([^.]+)$ $1.html [QSA] 
+	# NGINX -> we neither use static index nor page caching
+
+        # APACHE ->
+	# PERFORMANCE: Rewrite google friendly image URLs to real images
+	#RewriteRule ^/Bilder/([P|S|T])/([p|s|t][^/]+)/(.*)(\..*)$ /images/cimg/$1/$2$4
+	#RewriteRule ^/Bilder/testreports/([^/]+)/(.*)(\..*)$ /images/cimg/testreports/$1$3
+	#RewriteRule ^/Bilder/news/([^/]+)/(.*)(\..*)$ /images/cimg/news/$1$3
+	# NGINX ->
+        rewrite ^/Bilder/([P|S|T])/([p|s|t][^/]+)/(.*)(\..*)$ /images/cimg/$1/$2$4 break;
+	rewrite ^/Bilder/testreports/([^/]+)/(.*)(\..*)$ /images/cimg/testreports/$1$3 break;
+	rewrite ^/Bilder/news/([^/]+)/(.*)(\..*)$ /images/cimg/news/$1$3 break;
+
+	# APACHE ->
+        # PERFORMANCE: If no static file exists, let app servers handle the request
+        #RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+	# NGINX -> not needed, because static content will be server by nginx by default
+
     }
 }
