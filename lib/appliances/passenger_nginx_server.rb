@@ -94,6 +94,7 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
     svc.import_cfg_for("#{application}-nginx-smf")
 
     pfexec("/usr/sbin/logadm -w nginx -C 7 -z 0 -a '/usr/sbin/svcadm restart #{application}-nginx-#{deploy_env}' -p 1d #{app_server_install_directory}/logs/*.log")
+    pfexec("/usr/sbin/logadm -w application -C 7 -z 0 -p 1d #{shared_path}/log/*.log")
 
     assure(:file, "#{shared_path}/config/database.yml", render("database.yml.erb", {
       :db_host => get_attribute(:db_host, find_node_by_param(:mysql_master, true).host)
