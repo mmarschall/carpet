@@ -7,13 +7,14 @@ module Src
       pkg.install("sunstudioexpress@0.2009.3.1-0.101")
     end
     configure_opts = options.delete(:configure_opts)
+    cc = options.delete(:cc) || 'cc'
     tar_gz = url.split('/').last
     dir = tar_gz.gsub(".tar.gz", "") if tar_gz.include?(".tar.gz")
     dir = tar_gz.gsub(".tgz", "") if tar_gz.include?(".tgz")
     dir.gsub!("_", "-")
     invoke_command("test -f #{tar_gz} || wget --progress=dot:mega -N #{url}", options)
     invoke_command("/usr/gnu/bin/tar xzf #{tar_gz}", options)
-    install_cmd = "cd #{dir} && #{options.delete(:install_cmd) || "CC=cc ./configure#{' '+configure_opts unless configure_opts.nil?} && gmake && pfexec gmake install"}"
+    install_cmd = "cd #{dir} && #{options.delete(:install_cmd) || "CC=#{cc} ./configure#{' '+configure_opts unless configure_opts.nil?} && gmake && pfexec gmake install"}"
     invoke_command(install_cmd, options)
     pfexec("rm #{tar_gz}")
     pfexec("rm -rf #{dir}")
