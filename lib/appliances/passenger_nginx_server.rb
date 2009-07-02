@@ -69,11 +69,22 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
     end
 
     app_server_install_directory = get_attribute(:app_server_install_directory, "/export/home/#{application_user}/application_server")
+
     # install passenger + nginx combo
     assure(:command, "#{app_server_install_directory}/sbin/nginx") do
-      pfexec("/usr/local/lib/ruby/gems/1.8/gems/passenger-2.2.4/bin/passenger-install-nginx-module --auto --prefix=#{app_server_install_directory} --auto-download")
+      # get latest stable nginx version (passenger downloads 0.6.x)
+      nginx_version = 'nginx-0.7.61'
+      invoke_command("test -f #{nginx_version}.tar.gz || wget --progress=dot:mega -N http://sysoev.ru/nginx/#{nginx_version}.tar.gz")
+      invoke_command("/usr/gnu/bin/tar xzf #{nginx_version}.tar.gz")
+
+      # install passenger using just downloaded nginx sources
+      pfexec("/usr/local/lib/ruby/gems/1.8/gems/passenger-2.2.4/bin/passenger-install-nginx-module --auto --prefix=#{app_server_install_directory} --nginx-source-dir=/export/home/#{application_user}/#{nginx_version} --extra-configure-flags=none")
       adm.chown(app_server_install_directory, :owner => application_user)
       adm.chgrp(app_server_install_directory, :owner => 'staff')
+
+      # remove nginx sources
+      pfexec("rm #{nginx_version}.tar.gz")
+      pfexec("rm -rf #{nginx_version}")
     end
     assure(:file, "#{app_server_install_directory}/conf/nginx.conf", render("nginx.conf.erb", {
       :app_server_port => get_attribute(:app_server_port, 8000),
