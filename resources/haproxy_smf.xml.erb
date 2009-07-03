@@ -15,7 +15,7 @@
     </dependent>
     <exec_method name='start' type='method' exec='<%= working_directory %>/haproxy -D -f <%= working_directory %>/haproxy.cfg' timeout_seconds='60'>
       <method_context working_directory='<%= working_directory %>'>
-        <method_credential user='<%= application_user %>' group='staff' />
+        <method_credential user='root' group='root' />
       </method_context>
     </exec_method>
     <exec_method name='stop' type='method' exec=':kill' timeout_seconds='60'>
