@@ -30,8 +30,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
 
     assure :file, "#{haproxy_dir}/haproxy.cfg", render(haproxy_cfg_erb, {
-      :port => get_attribute(:haproxy_port, 7999),
-      :mongrel_start_port => get_attribute(:mongrel_start_port, 8000),
+      :port => get_attribute(:port, 80),
       :app_servers => roles[:app].servers,
       :working_directory => haproxy_dir
     })
