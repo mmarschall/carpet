@@ -86,14 +86,14 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
       pfexec("rm #{nginx_version}.tar.gz")
       pfexec("rm -rf #{nginx_version}")
     end
-    assure(:file, "#{app_server_install_directory}/conf/nginx.conf", render("nginx.conf.erb", {
+    assure(:file, "#{app_server_install_directory}/conf/nginx.conf", render(nginx_conf_erb, {
       :app_server_port => get_attribute(:app_server_port, 8000),
       :app_server_pool_size => get_attribute(:app_server_pool_size, 4),
       :app_server_name => get_attribute(:app_server_name, 'localhost'),
       :application_directory => current_path,
       :deploy_env => deploy_env   
-    }), rails_default_permissions)
-    
+    }), rails_default_permissions) if exists?(:nginx_conf_erb)
+
     assure(:file, "/var/svc/manifest/#{application}-nginx-smf.xml",
            render("nginx_smf.xml.erb",
                   {
