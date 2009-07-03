@@ -44,5 +44,4 @@ lib/plugins/zfs.rb
 lib/plugins/src.rb
 lib/carpet.rb
 lib/capistrano/deploy/remote_dependency.rb
-carpet.iml
 README
