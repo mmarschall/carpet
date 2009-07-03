@@ -80,7 +80,7 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
       # install passenger using just downloaded nginx sources
       pfexec("/usr/local/lib/ruby/gems/1.8/gems/passenger-2.2.4/bin/passenger-install-nginx-module --auto --prefix=#{app_server_install_directory} --nginx-source-dir=/export/home/#{application_user}/#{nginx_version} --extra-configure-flags=none")
       adm.chown(app_server_install_directory, :owner => application_user)
-      adm.chgrp(app_server_install_directory, :owner => 'staff')
+      adm.chgrp(app_server_install_directory, :group => 'staff')
 
       # remove nginx sources
       pfexec("rm #{nginx_version}.tar.gz")
