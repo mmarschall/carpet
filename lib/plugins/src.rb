@@ -22,3 +22,4 @@ module Src
 end
 
 Capistrano.plugin :src, Src
+
