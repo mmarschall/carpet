@@ -11,7 +11,7 @@ module Nagios
 define host{
   use generic-host
   host_name #{host}
-  address #{ipaddress}
+  address #{ipaddress.to_a[0]}
   check_command check-host-alive
   max_check_attempts 10
   notification_interval 30
