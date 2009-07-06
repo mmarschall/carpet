@@ -9,7 +9,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     assure :file, "/etc/apache2/2.2/conf.d/vhost.conf", render(vhost_conf_erb, {
       :hostname => capture("hostname").strip,
-      :app_server_port => get_attribute(:app_server_port, 8000),
+      :app_server_port => get_attribute(:app_server_port, 80),
       :web_servers => roles[:web].servers,
       :app_servers => roles[:app].servers,
       :apache_log_dir => "/var/apache2/2.2/logs",
