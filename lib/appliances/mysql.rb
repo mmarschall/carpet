@@ -47,7 +47,20 @@ exit 0
   end
   
   task :mysql_slave_config do
-    sql = "CHANGE MASTER TO MASTER_HOST='#{current_node.options[:mysql_master_host]}', MASTER_USER='#{db_user}', MASTER_PASSWORD='#{db_password}' ;"
-    invoke_command("/usr/mysql/bin/mysql -u root --password=#{mysql_root_password} --execute \"#{sql}\"")
+    if slave_status("Slave_IO_Running") == "No"
+      sql = "CHANGE MASTER TO MASTER_HOST='#{current_node.options[:mysql_master_host]}', MASTER_USER='#{db_user}', MASTER_PASSWORD='#{db_password}' ;"
+      invoke_command("/usr/mysql/bin/mysql -u root --password=#{mysql_root_password} --execute \"#{sql}\"")
+    end
+  end
+
+  def slave_status(key)
+    sql = "SHOW SLAVE STATUS\\G"
+    slave_status = capture("/usr/mysql/bin/mysql -u root --password=#{mysql_root_password} --execute \"#{sql}\"")
+    lines = slave_status.split("\n")
+    lines.each do |line|
+      value = ""
+      value = line.strip.split(":")[1] if line.strip.split(":")[0] == key
+      return value.strip
+    end
   end
 end
