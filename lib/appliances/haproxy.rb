@@ -30,9 +30,10 @@ Capistrano::Configuration.instance(:must_exist).load do
 
 
     assure :file, "#{haproxy_dir}/haproxy.cfg", render(haproxy_cfg_erb, {
-      :port => get_attribute(:port, 80),
+      :port => get_attribute(:port, 8000),
       :app_servers => roles[:app].servers,
-      :working_directory => haproxy_dir
+      :working_directory => haproxy_dir,
+      :deploy_env => deploy_env
     })
     assure(:file, "#{haproxy_dir}/503.http", File.read(haproxy_503_http)) if exists?(:haproxy_503_http)
     svc.restart("network/haproxy-#{deploy_env}")
