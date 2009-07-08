@@ -9,8 +9,6 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     nginx_install_dir = get_attribute(:nginx_install_dir, "/opt/nginx")
-
-    # install passenger + nginx combo
     assure(:command, "#{nginx_install_dir}/sbin/nginx") do
       src.install('http://sysoev.ru/nginx/nginx-0.7.61.tar.gz', :cc => 'gcc', :configure_opts => "--prefix=#{nginx_install_dir}")
     end
@@ -22,16 +20,16 @@ Capistrano::Configuration.instance(:must_exist).load do
       :deploy_env => deploy_env   
     })) if exists?(:nginx_conf_erb)
 
-    assure(:file, "/var/svc/manifest/#{application}-nginx-smf.xml",
-           render("nginx_smf.xml.erb",
-                  {
-                      :application => application,
+    service_name = "nginx-#{application}-#{deploy_env}"
+    assure(:file, "/var/svc/manifest/#{service_name}-smf.xml",
+           render("nginx_smf.xml.erb",{
+                      :service_name => service_name,
                       :installation_directory => nginx_install_dir
-                  }
-           )
+           })
     )
-    svc.import_cfg_for("#{application}-nginx-smf")
-
-    pfexec("/usr/sbin/logadm -w nginx -C 7 -z 0 -a '/usr/sbin/svcadm restart #{application}-nginx-#{deploy_env}' -p 1d #{nginx_install_dir}/logs/*.log")
+    svc.import_cfg_for("#{service_name}-smf")
+    svc.restart("network/#{service_name}}")
+    
+    pfexec("/usr/sbin/logadm -w nginx -C 7 -z 0 -a '/usr/sbin/svcadm restart #{service_name}' -p 1d #{nginx_install_dir}/logs/*.log")
   end
 end

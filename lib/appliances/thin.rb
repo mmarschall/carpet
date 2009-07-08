@@ -68,23 +68,24 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
             }
            ), rails_default_permissions
     )
-
-    assure(:file, "/var/svc/manifest/#{application}-thin-smf.xml",
-           render("thin_smf.xml.erb",
-                  { :service_name => application, :working_directory => current_path,
-                    :app_server_start_port => get_attribute(:app_server_start_port, 8000),
-                    :app_server_pool_size => get_attribute(:app_server_pool_size, 4),
-                    :config_file => thin_config_file }
-           )
-    )
-    svc.import_cfg_for("#{application}-thin-smf")
-    pfexec("/usr/sbin/logadm -w application -C 7 -z 0 -a '/usr/sbin/svcadm restart #{application}-thin-#{deploy_env}' -p 1d #{shared_path}/log/*.log")
-
     assure(:file, "#{shared_path}/config/database.yml", render("database.yml.erb", {
       :db_host => get_attribute(:db_host, find_node_by_param(:mysql_master, true).host)
     }), rails_default_permissions)
-
     upload_environment_config
+
+    service_name = "thin-#{application}-#{deploy_env}"
+    assure(:file, "/var/svc/manifest/#{service_name}-smf.xml",
+           render("thin_smf.xml.erb",{
+               :service_name => service_name, :working_directory => current_path,
+               :app_server_start_port => get_attribute(:app_server_start_port, 8000),
+               :app_server_pool_size => get_attribute(:app_server_pool_size, 4),
+               :config_file => thin_config_file
+           })
+    )
+    svc.import_cfg_for("#{service_name}-smf")
+    svc.restart("network/#{service_name}}")
+
+    pfexec("/usr/sbin/logadm -w application -C 7 -z 0 -a '/usr/sbin/svcadm restart #{service_name}' -p 1d #{shared_path}/log/*.log")
   end
 
   def upload_environment_config

@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
-<service_bundle type='manifest' name='<%= service_name %>-thin-<%= deploy_env %>'>
-  <service name='network/<%= service_name %>-thin-<%= deploy_env %>' type='service' version='0'>
+<service_bundle type='manifest' name='<%= service_name %>'>
+  <service name='network/<%= service_name %>' type='service' version='0'>
     <create_default_instance enabled='true'/>
     <single_instance/>
     <dependency name='fs' grouping='require_all' restart_on='none' type='service'>
@@ -11,7 +11,7 @@
       <service_fmri value='svc:/network/loopback'/>
       <service_fmri value='svc:/network/nfs/client'/>
     </dependency>
-    <dependent name='thin_multi-user' restart_on='none' grouping='optional_all'>
+    <dependent name='<%= service_name %>_multi-user' restart_on='none' grouping='optional_all'>
       <service_fmri value='svc:/milestone/multi-user'/>
     </dependent>
     <exec_method name='start' type='method' exec='/usr/local/bin/thin -C <%= config_file %> start' timeout_seconds='60'>

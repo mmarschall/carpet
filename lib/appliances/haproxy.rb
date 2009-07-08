@@ -1,12 +1,8 @@
 Capistrano::Configuration.instance(:must_exist).load do
   task :haproxy do
+    haproxy_dir = get_attribute(:haproxy_dir, "/opt/haproxy")
 
-    haproxy_dir = "/export/home/#{application_user}/haproxy"
-    haproxy_cfg = <<-CFG
-# nothing to see here
-    CFG
-
-    assure :directory, "#{haproxy_dir}", {:owner => application_user, :group => "staff", :mode => 755}
+    assure(:directory, "#{haproxy_dir}")
 
     assure :command, 'gcc' do
       gcc.install!
@@ -20,15 +16,6 @@ Capistrano::Configuration.instance(:must_exist).load do
       )
     end
 
-    assure(:file, "/var/svc/manifest/haproxy-smf.xml",
-           render("haproxy_smf.xml.erb", {
-               :service_name => "haproxy", :working_directory => haproxy_dir
-           }),
-           {:owner => application_user, :group => "staff", :mode => 775}
-    )
-    svc.import_cfg_for("haproxy-smf")
-
-
     assure :file, "#{haproxy_dir}/haproxy.cfg", render(haproxy_cfg_erb, {
       :port => get_attribute(:port, 8000),
       :app_servers => roles[:app].servers,
@@ -36,6 +23,14 @@ Capistrano::Configuration.instance(:must_exist).load do
       :deploy_env => deploy_env
     })
     assure(:file, "#{haproxy_dir}/503.http", File.read(haproxy_503_http)) if exists?(:haproxy_503_http)
-    svc.restart("network/haproxy-#{deploy_env}")
+
+    service_name = "haproxy-#{application}-#{deploy_env}"
+    assure(:file, "/var/svc/manifest/#{service_name}-smf.xml",
+           render("haproxy_smf.xml.erb", {
+               :service_name => service_name, :working_directory => haproxy_dir
+           })
+    )
+    svc.import_cfg_for("#{service_name}-smf")
+    svc.restart("network/#{service_name}}")
   end
 end
