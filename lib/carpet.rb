@@ -174,8 +174,12 @@ def current_node
 end
 
 def rake(task, options={})
+  invoke_command(build_rake_command(task), options)
+end
+
+def build_rake_command(task)
   rake = fetch(:rake, "rake")
-  invoke_command("cd #{current_path}; #{rake} RAILS_ENV=#{deploy_env} #{task}", options)
+  "cd #{current_path}; #{rake} RAILS_ENV=#{deploy_env} #{task}"
 end
 
 def schedule_rake_task(task, params={})
