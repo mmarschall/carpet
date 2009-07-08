@@ -38,7 +38,7 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
     assure :gem, "libxml-ruby", "0.9.7"
     assure :gem, "rspec", "1.2.2"
     assure :gem, "rspec-rails", "1.2.2"
-    assure :gem, "cucumber", "0.1.15"
+    assure :gem, "cucumber", "0.3.11"
 
     custom_gems = get_attribute(:gems, {})
     custom_gems.each do |gem, version|
