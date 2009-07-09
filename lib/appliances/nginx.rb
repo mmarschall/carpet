@@ -14,7 +14,6 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     assure(:file, "#{nginx_install_dir}/conf/nginx.conf", render(nginx_conf_erb, {
-      :server_name => get_attribute(:server_name, '*'),  
       :haproxy_port => get_attribute(:haproxy_port, 8000),
       :application_directory => current_path,
       :deploy_env => deploy_env,
