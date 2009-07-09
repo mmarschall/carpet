@@ -17,7 +17,8 @@ Capistrano::Configuration.instance(:must_exist).load do
       :server_name => get_attribute(:server_name, '*'),  
       :haproxy_port => get_attribute(:haproxy_port, 8000),
       :application_directory => current_path,
-      :deploy_env => deploy_env   
+      :deploy_env => deploy_env,
+      :basic_auth => get_attribute(:basic_auth, false)   
     })) if exists?(:nginx_conf_erb)
 
     service_name = "nginx-#{application}-#{deploy_env}"
@@ -28,7 +29,7 @@ Capistrano::Configuration.instance(:must_exist).load do
            })
     )
     svc.import_cfg_for("#{service_name}-smf")
-    svc.restart("network/#{service_name}}")
+    svc.restart("network/#{service_name}")
     
     pfexec("/usr/sbin/logadm -w nginx -C 7 -z 0 -a '/usr/sbin/svcadm restart #{service_name}' -p 1d #{nginx_install_dir}/logs/*.log")
   end

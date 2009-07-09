@@ -12,7 +12,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     assure :command, "#{haproxy_dir}/haproxy" do
       src.install("http://haproxy.1wt.eu/download/1.3/src/haproxy-1.3.18.tar.gz",
-        :install_cmd => "make TARGET=solaris CC=gcc CFLAGS=-I/usr/include/pcre USE_PCRE=1 && cp haproxy #{haproxy_dir}"
+        :install_cmd => "make TARGET=solaris CC=gcc CFLAGS=-I/usr/include/pcre USE_PCRE=1 && pfexec cp haproxy #{haproxy_dir}"
       )
     end
 
@@ -31,6 +31,6 @@ Capistrano::Configuration.instance(:must_exist).load do
            })
     )
     svc.import_cfg_for("#{service_name}-smf")
-    svc.restart("network/#{service_name}}")
+    svc.restart("network/#{service_name}")
   end
 end

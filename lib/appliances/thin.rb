@@ -83,7 +83,7 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
            })
     )
     svc.import_cfg_for("#{service_name}-smf")
-    svc.restart("network/#{service_name}}")
+    svc.restart("network/#{service_name}")
 
     pfexec("/usr/sbin/logadm -w application -C 7 -z 0 -a '/usr/sbin/svcadm restart #{service_name}' -p 1d #{shared_path}/log/*.log")
   end
