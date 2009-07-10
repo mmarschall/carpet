@@ -47,6 +47,7 @@ exit 0
   end
   
   task :mysql_slave_config do
+    assure(:file, "/usr/local/nagios/libexec/check_mysql_slave_io.sh", File.read("#{File.dirname(__FILE__)}/../../resources/nagios-plugins/check_mysql_slave_io.sh"), :mode => 755)
     if slave_status("Slave_IO_Running") == "No"
       sql = "CHANGE MASTER TO MASTER_HOST='#{current_node.options[:mysql_master_host]}', MASTER_USER='#{db_user}', MASTER_PASSWORD='#{db_password}' ;"
       invoke_command("/usr/mysql/bin/mysql -u root --password=#{mysql_root_password} --execute \"#{sql}\"")
