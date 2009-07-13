@@ -24,10 +24,6 @@ while [ $# -gt 0 ]; do
                 shift
                 MAX_MEM=$1
                 ;;
-        -h | --host)
-                shift
-                HOSTED_ON=$1
-                ;;
         -n | --node)
 				        shift
                 NODE_NAME=$1

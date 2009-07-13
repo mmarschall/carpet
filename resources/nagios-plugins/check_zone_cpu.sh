@@ -39,7 +39,7 @@ while [ $# -gt 0 ]; do
         esac
 shift
 done
-CPU=`/usr/bin/prstat -Z 1 1 | grep $NODE_NAME | awk '{ print $7 }' | head -c -2`
+CPU=`/usr/bin/prstat -Z 1 1 | /usr/gnu/bin/grep $NODE_NAME | /usr/gnu/bin/awk '{ print $7 }' | /usr/gnu/bin/head -c -2`
 
 # Return
 	if [ $CPU -ge $WARNING_THRESHOLD ] && [ $CPU -lt $CRITICAL_THRESHOLD ]; then
