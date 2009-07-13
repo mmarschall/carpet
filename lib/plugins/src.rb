@@ -4,7 +4,9 @@ module Src
   def install(url, options={})
     assure :command, "cc" do
       pkg.install("SUNWfontconfig")
-      pkg.install("sunstudioexpress")
+      # TODO: change to "sunstudio12u1" when upgrading to OpenSolaris 2009.06 (_if_ Sun CC is still required)
+      # see: http://developers.sun.com/sunstudio/downloads/opensolaris/index.jsp
+      pkg.install("sunstudioexpress@0.2008.11,5.11-0.86:20081113T205836Z")
     end
     configure_opts = options.delete(:configure_opts)
     tar_gz = url.split('/').last

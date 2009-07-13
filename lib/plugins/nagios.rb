@@ -21,7 +21,9 @@ define host{
   action_url /nagios/pnp/index.php?host=$HOSTNAME$' onmouseover="get_g('$HOSTNAME$','_HOST_')" onmouseout="clear_g()"
 } 
     CFG
-    put(host_cfg, "#{nagios_objects_dir}/#{host}.cfg",:hosts => nagios_server)
+    with_env("HOSTS", nagios_server) do
+      put(host_cfg, "#{nagios_objects_dir}/#{host}.cfg")
+    end
   end
   
   def add_hostgroup(hostgroup, members)
@@ -31,7 +33,9 @@ define hostgroup{
   members #{members}
 }
     CFG
-    put(hostgroup_cfg, "#{nagios_objects_dir}/#{hostgroup}.cfg", :hosts => nagios_server)
+    with_env("HOSTS", nagios_server) do
+      put(hostgroup_cfg, "#{nagios_objects_dir}/#{hostgroup}.cfg")
+    end
   end
   
   def add_service(service, host, service_details)
