@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Nagios return codes
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+STATE_UNKNOWN=3
+
 # prstat -Z
 # PID USERNAME  SIZE   RSS STATE  PRI NICE      TIME  CPU PROCESS/NLWP
 # 173 daemon     17M   11M sleep   59    0   3:18:42 0.2% rcapd/1
