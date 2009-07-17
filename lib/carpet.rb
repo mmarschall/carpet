@@ -11,13 +11,18 @@ require 'plugins/adm'
 require 'plugins/nfs'
 require 'plugins/cpan'
 require 'plugins/nagios'
+require 'plugins/gcc'
 
 # infrastructure
 require "infrastructure/zones"
 
 # appliances
 require "appliances/apache_lb"
+require "appliances/haproxy"
 require "appliances/mongrel_cluster"
+require "appliances/passenger_nginx_server"
+require "appliances/nginx"
+require "appliances/thin"
 require "appliances/mysql"
 require "appliances/memcache"
 

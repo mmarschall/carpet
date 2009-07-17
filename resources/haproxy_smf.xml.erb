@@ -1,0 +1,23 @@
+<?xml version='1.0'?>
+<!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
+<service_bundle type='manifest' name='<%= service_name %>'>
+  <service name='network/<%= service_name %>' type='service' version='0'>
+    <create_default_instance enabled='true'/>
+    <single_instance/>
+    <dependency name='fs' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/system/filesystem/local'/>
+    </dependency>
+    <dependency name='net' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/network/loopback'/>
+    </dependency>
+    <dependent name='<%= service_name %>_multi-user' restart_on='none' grouping='optional_all'>
+      <service_fmri value='svc:/milestone/multi-user'/>
+    </dependent>
+    <exec_method name='start' type='method' exec='<%= working_directory %>/haproxy -D -f <%= working_directory %>/haproxy.cfg' timeout_seconds='60'>
+      <method_context working_directory='<%= working_directory %>'/>
+    </exec_method>
+    <exec_method name='stop' type='method' exec=':kill' timeout_seconds='60'>
+      <method_context/>
+    </exec_method>
+  </service>
+</service_bundle>

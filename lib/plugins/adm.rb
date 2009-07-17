@@ -92,7 +92,14 @@ module Adm
   end
   
   def ln(source_file, target_file, options={})
-    pfexec("/usr/bin/ln -nfs #{source_file} #{target_file}", options)
+    cmd = "/usr/bin/ln -nfs #{source_file} #{target_file}"
+
+    no_pfexec = options.delete(:no_pfexec)
+    if no_pfexec == true
+      run(cmd, options)
+    else
+      pfexec(cmd, options)
+    end
   end
   
   def enable_ntp(server, options={})
