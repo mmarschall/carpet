@@ -1,5 +1,7 @@
 Capistrano::Configuration.instance(:must_exist).load do 
   task :nginx do
+    assure(:package, 'SUNWpcre')
+
     assure :command, 'gcc' do
       gcc.install!
     end
@@ -7,6 +9,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     assure :command, :git do
       src.install("http://kernel.org/pub/software/scm/git/git-1.6.1.tar.gz")
     end
+    known_hosts = <<-KH
+github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+    KH
+    assure :file, "/export/home/#{application_user}/.ssh/known_hosts", known_hosts
 
     nginx_install_dir = get_attribute(:nginx_install_dir, "/opt/nginx")
     assure(:command, "#{nginx_install_dir}/sbin/nginx") do
@@ -28,8 +34,7 @@ Capistrano::Configuration.instance(:must_exist).load do
            })
     )
     svc.import_cfg_for("#{service_name}-smf")
-    svc.restart("network/#{service_name}")
-    
     pfexec("/usr/sbin/logadm -w nginx -C 7 -z 0 -a '/usr/sbin/svcadm restart #{service_name}' -p 1d #{nginx_install_dir}/logs/*.log")
+    svc.restart("network/#{service_name}")
   end
 end
