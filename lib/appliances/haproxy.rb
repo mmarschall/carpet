@@ -16,6 +16,8 @@ Capistrano::Configuration.instance(:must_exist).load do
       )
     end
 
+    assure(:file, "#{haproxy_dir}/haproxy.sh", "#!/usr/bin/env sh\nulimit -s 1048576\n#{haproxy_dir}/haproxy -D -f #{haproxy_dir}/haproxy.cfg\n", :mode => 755)
+
     assure :file, "#{haproxy_dir}/haproxy.cfg", render(haproxy_cfg_erb, {
       :port => get_attribute(:port, 8000),
       :app_servers => roles[:app].servers,

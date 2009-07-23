@@ -19,6 +19,8 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
       src.install('http://sysoev.ru/nginx/nginx-0.7.61.tar.gz', :cc => 'gcc', :configure_opts => "--prefix=#{nginx_install_dir}")
     end
 
+    assure(:file, "#{nginx_install_dir}/sbin/nginx.sh", "#!/usr/bin/env sh\nulimit -s 1048576\n#{nginx_install_dir}/sbin/nginx\n", :mode => 755)
+
     assure(:file, "#{nginx_install_dir}/conf/nginx.conf", render(nginx_conf_erb, {
       :haproxy_port => get_attribute(:haproxy_port, 8000),
       :application_directory => current_path,

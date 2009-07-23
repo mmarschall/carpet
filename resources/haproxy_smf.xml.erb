@@ -13,7 +13,7 @@
     <dependent name='<%= service_name %>_multi-user' restart_on='none' grouping='optional_all'>
       <service_fmri value='svc:/milestone/multi-user'/>
     </dependent>
-    <exec_method name='start' type='method' exec='<%= working_directory %>/haproxy -D -f <%= working_directory %>/haproxy.cfg' timeout_seconds='60'>
+    <exec_method name='start' type='method' exec="<%= working_directory %>/haproxy.sh" timeout_seconds='60'>
       <method_context working_directory='<%= working_directory %>'/>
     </exec_method>
     <exec_method name='stop' type='method' exec=':kill' timeout_seconds='60'>
