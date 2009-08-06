@@ -25,7 +25,7 @@ shift
 done
 
 
-SLAVE_STATUS=`/usr/mysql/bin/mysql -u root --password=$PASSWORD --execute 'SHOW SLAVE STATUS\G' | grep $MODE | awk '{print $2}'`
+SLAVE_STATUS=`/usr/mysql/5.0/bin/mysql -u root --password=$PASSWORD --execute 'SHOW SLAVE STATUS\G' | grep $MODE | awk '{print $2}'`
 
 # Return
   if [ "$SLAVE_STATUS" == "No" ]; then

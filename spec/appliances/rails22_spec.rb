@@ -78,7 +78,7 @@ describe "rails appliance recipe" do
   end
   
   it "should assure the mysql gem" do
-    @config.should_receive(:assure).with(:gem, "mysql", "2.7", :gem_opts => "-- --with-mysql-dir=/usr/mysql")
+    @config.should_receive(:assure).with(:gem, "mysql", "2.7", :gem_opts => "-- --with-mysql-dir=/usr/mysql/5.0")
     @config.load do
       rails22
     end
