@@ -9,7 +9,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     zone.configure_autoboot(zone_name, true, zone_options)
     zone.set_quota(zone_name, zone_options[:disk], zone_options)
     zone.configure_system_id(zone_name, zone_options)
-    assure(:file, "/etc/ssh/sshd_config", File.read(sshd_config), :via => :zlogin, :zone => zone_name) if exists?(:sshd_config)
+    if exists?(:sshd_config)
+      assure(:file, "/etc/ssh/sshd_config", File.read(sshd_config), :via => :zlogin, :zone => zone_name)
+      svc.restart("svc:/network/ssh:default")
+    end
     assure(:package, "SUNWsudo", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:user, application_user, zone_options.merge({:sudoers => true, :profiles => "Primary Administrator", :via => :zlogin, :zone => zone_name, :uid => uid_for(application_user)}))
     assure(:file, "/export/home/#{application_user}/.profile", dot_profile, :via => :zlogin, :zone => zone_name) if exists?(:dot_profile)
