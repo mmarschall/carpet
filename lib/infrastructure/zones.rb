@@ -11,7 +11,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     zone.configure_system_id(zone_name, zone_options)
     if exists?(:sshd_config)
       assure(:file, "/etc/ssh/sshd_config", File.read(sshd_config), :via => :zlogin, :zone => zone_name)
-      svc.restart("svc:/network/ssh:default")
+      svc.restart("svc:/network/ssh:default", :via => :zlogin, :zone => zone_name)
     end
     assure(:package, "SUNWsudo", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:user, application_user, zone_options.merge({:sudoers => true, :profiles => "Primary Administrator", :via => :zlogin, :zone => zone_name, :uid => uid_for(application_user)}))
