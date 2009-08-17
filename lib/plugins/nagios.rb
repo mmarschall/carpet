@@ -51,8 +51,10 @@ define service{
   use generic-service
   notification_interval 0 ;
   action_url /nagios/pnp/index.php?host=$HOSTNAME$&srv=$SERVICEDESC$' onmouseover="get_g('$HOSTNAME$','$SERVICEDESC$')" onmouseout="clear_g()"
-}
-    CFG
+  CFG
+  service_cfg << "  normal_check_interval #{service_details[:normal_check_interval]}" unless service_details[:normal_check_interval].nil?
+  service_cfg << "\n}"
+
     with_env("HOSTS", nagios_server) do
       put(service_cfg, "#{nagios_objects_dir}/#{service}_on_#{host}.cfg")
     end

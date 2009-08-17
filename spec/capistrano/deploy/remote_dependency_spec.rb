@@ -133,8 +133,8 @@ describe "RemoteDependency Extension" do
     
     it "should pass given options to the gem install command" do
       @dep.stub!(:check_for_gem).and_return(@false_dep)
-      @config.should_receive(:invoke_command).with("gem install mysql --no-rdoc --no-ri --version 2.7 -- --with-mysql-dir=/usr/mysql", {:via => :sudo})
-      @dep.gem("mysql", "2.7", :gem_opts => "-- --with-mysql-dir=/usr/mysql")
+      @config.should_receive(:invoke_command).with("gem install mysql --no-rdoc --no-ri --version 2.7 -- --with-mysql-dir=/usr/mysql/5.0", {:via => :sudo})
+      @dep.gem("mysql", "2.7", :gem_opts => "-- --with-mysql-dir=/usr/mysql/5.0")
     end
     
     it "should not try to install a gem if it is already there" do
