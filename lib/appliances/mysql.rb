@@ -27,7 +27,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       backup_sh = <<-EOSH
 #!/bin/sh
 FILE=mysql-#{db_name}-$(date +"%d-%m-%Y-%Hh%Mm%Ss").sql.gz
-/usr/mysql/bin/mysqldump -u root -h localhost -p#{mysql_root_password} --flush-logs #{db_name} | /usr/bin/gzip -9 > $FILE
+/usr/mysql/5.0/bin/mysqldump -u root -h localhost -p#{mysql_root_password} --flush-logs #{db_name} | /usr/bin/gzip -9 > $FILE
 ftp #{ftp_backup_host} <<EOF
 put $FILE $FILE
 quit
@@ -50,13 +50,13 @@ exit 0
     assure(:file, "/usr/local/nagios/libexec/check_mysql_slave.sh", File.read("#{File.dirname(__FILE__)}/../../resources/nagios-plugins/check_mysql_slave.sh"), :mode => 755)
     if slave_status("Slave_IO_Running") == "No"
       sql = "CHANGE MASTER TO MASTER_HOST='#{current_node.options[:mysql_master_host]}', MASTER_USER='#{db_user}', MASTER_PASSWORD='#{db_password}' ;"
-      invoke_command("/usr/mysql/bin/mysql -u root --password=#{mysql_root_password} --execute \"#{sql}\"")
+      invoke_command("/usr/mysql/5.0/bin/mysql -u root --password=#{mysql_root_password} --execute \"#{sql}\"")
     end
   end
 
   def slave_status(key)
     sql = "SHOW SLAVE STATUS\\G"
-    slave_status = capture("/usr/mysql/bin/mysql -u root --password=#{mysql_root_password} --execute \"#{sql}\"")
+    slave_status = capture("/usr/mysql/5.0/bin/mysql -u root --password=#{mysql_root_password} --execute \"#{sql}\"")
     lines = slave_status.split("\n")
     lines.each do |line|
       value = ""

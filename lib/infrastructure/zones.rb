@@ -13,6 +13,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       assure(:file, "/etc/ssh/sshd_config", File.read(sshd_config), :via => :zlogin, :zone => zone_name)
       svc.restart("svc:/network/ssh:default", :via => :zlogin, :zone => zone_name)
     end
+    pfexec("pkg set-authority -m #{pkg_mirror} opensolaris.org", zone_options.merge({:via => :zlogin, :zone => zone_name})) if exists?(:pkg_mirror)
     assure(:package, "SUNWsudo", zone_options.merge({:via => :zlogin, :zone => zone_name}))
     assure(:user, application_user, zone_options.merge({:sudoers => true, :profiles => "Primary Administrator", :via => :zlogin, :zone => zone_name, :uid => uid_for(application_user)}))
     assure(:file, "/export/home/#{application_user}/.profile", dot_profile, :via => :zlogin, :zone => zone_name) if exists?(:dot_profile)
