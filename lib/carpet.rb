@@ -25,6 +25,7 @@ require "appliances/nginx"
 require "appliances/thin"
 require "appliances/mysql"
 require "appliances/memcache"
+require "appliances/ruby"
 
 # Temporarily sets an environment variable, yields to a block, and restores
 # the value when it is done.
