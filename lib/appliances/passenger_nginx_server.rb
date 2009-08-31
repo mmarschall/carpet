@@ -41,7 +41,7 @@ github.com,65.74.177.129 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9I
     assure :gem, "rack", "0.9.1"
     assure :gem, "rails", "2.3.2"
     assure :gem, "memcache-client", "1.5.0"
-    assure :gem, "mysql", "2.7", :gem_opts => "-- --with-mysql-dir=/usr/mysql/5.0"
+    assure :gem, "mysql", "2.7", :gem_opts => "-- --with-mysql-dir=/usr/mysql"
     assure :gem, "net-scp", "1.0.1"
     assure :gem, "libxml-ruby", "0.9.7"
     assure :gem, "rspec", "1.2.2"
