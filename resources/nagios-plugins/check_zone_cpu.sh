@@ -1,4 +1,11 @@
 #!/bin/sh
+# ========================================================================================
+# Opensolaris Zone CPU Plugin for Nagios
+#
+# Written by: Matthias Marschall (mm@agileweboperations.com)
+#
+# Usage: ./check_zone_cpu.sh -n <zone name> [-w <warn>] [-c <critical>]
+# ========================================================================================
 
 # Nagios return codes
 STATE_OK=0

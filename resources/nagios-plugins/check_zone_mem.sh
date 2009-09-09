@@ -1,4 +1,11 @@
 #!/bin/sh
+# ========================================================================================
+# Opensolaris Zone Memory Plugin for Nagios
+#
+# Written by: Matthias Marschall (mm@agileweboperations.com)
+#
+# Usage: ./check_zone_mem.sh -n <zone name> -m <max mem of zone> [-w <warn>] [-c <critical>]
+# ========================================================================================
 
 # Nagios return codes
 STATE_OK=0
